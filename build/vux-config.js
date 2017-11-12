@@ -45,16 +45,16 @@ module.exports = {
             path = one.split('#')[1]
           }
           str.push(`{
-  path: '${path}',
-  component: () => import('./demos/${filename}.vue').then(m => m.default)
-}`)
+            path: '${path}',
+            component: () => import('./demos/${filename}.vue').then(m => m.default)
+          }`)
         })
 
         // 404 page
         str.push(`{
-  path: '*',
-  component: () => import('./demos/NotFoundComponent.vue').then(m => m.default)
-}`)
+          path: '*',
+          component: () => import('./demos/NotFoundComponent.vue').then(m => m.default)
+        }`)
 
         str = `[${str.join(',\n')}]`
         source = source.replace('const routes = []', 'const routes = ' + str)

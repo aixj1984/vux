@@ -37,16 +37,32 @@
         
         <x-header slot="header"
         style="width:100%;position:absolute;left:0;top:0;z-index:100;"
+        v-if="route.path != '/component/coursestudy'"
         :left-options="leftOptions"
         :right-options="rightOptions"
         :title="title"
         :transition="headerTransition"
         @on-click-more="onClickMore">
-          <span v-if="route.path === '/' || route.path === '/component/drawer'" slot="overwrite-left" @click="drawerVisibility = !drawerVisibility">
+          <span v-if="route.path === '/' || route.path === '/component/coursegrid'" slot="overwrite-left" @click="drawerVisibility = !drawerVisibility">
             <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
           </span>
         </x-header>
-        
+
+        <x-header title="slot:overwrite-title"
+          style="width:100%;position:absolute;left:0;top:0;z-index:100;"
+          v-if="route.path === '/component/coursestudy'"
+          :right-options="{showMore: true}" @on-click-more="onClickMore">
+          <span  @click="drawerVisibility = !drawerVisibility">
+            <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
+          </span>
+          <div class="overwrite-title-demo" slot="overwrite-title">
+            <button-tab>
+              <button-tab-item selected>学习</button-tab-item>
+              <button-tab-item>测试</button-tab-item>
+            </button-tab>
+          </div>
+        </x-header>
+
         <!-- remember to import BusPlugin in main.js if you use components: x-img and sticky -->
         <transition
         @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')" 
@@ -55,27 +71,38 @@
         </transition>
 
         <tabbar class="vux-demo-tabbar" icon-class="vux-center" v-show="!isTabbarDemo" slot="bottom">
+          
+          <!--
           <tabbar-item :link="{path:'/'}" :selected="route.path === '/'">
             <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
             <span slot="label">Home</span>
           </tabbar-item>
+          
           <tabbar-item :link="{path:'/demo'}" :selected="isDemo" badge="9">
             <span class="demo-icon-22" slot="icon">&#xe633;</span>
             <span slot="label"><span v-if="componentName" class="vux-demo-tabbar-component">{{componentName}}</span><span v-else>Demos</span></span>
+          </tabbar-item>
+          -->
+          <tabbar-item :link="{path:'/component/coursehome'}" :selected="isDemo" >
+            <span class="demo-icon-22" slot="icon">&#xe632;</span>
+            <span slot="label">首页</span>
+          </tabbar-item>
+          <tabbar-item :link="{path:'/component/coursegrid'}" :selected="route.path === '/component/coursegrid'">
+            <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
+            <span slot="label">课程</span>
           </tabbar-item>
           <tabbar-item :link="{path:'/project/donate'}" :selected="route.path === '/project/donate'" show-dot>
             <span class="demo-icon-22" slot="icon">&#xe630;</span>
             <span slot="label">Donate</span>
           </tabbar-item>
         </tabbar>
-
       </view-box>
     </drawer>
   </div>
 </template>
 
 <script>
-import { Radio, Group, Cell, Badge, Drawer, Actionsheet, ButtonTab, ButtonTabItem, ViewBox, XHeader, Tabbar, TabbarItem, Loading, TransferDom } from 'vux'
+import { Radio, Group, Cell, Badge, Drawer, Actionsheet, ButtonTab, ButtonTabItem, ViewBox, XHeader, Tabbar, TabbarItem, Loading, TransferDom,Grid, GridItem } from 'vux'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -95,7 +122,9 @@ export default {
     Tabbar,
     TabbarItem,
     Loading,
-    Actionsheet
+    Actionsheet,
+    Grid, 
+    GridItem
   },
   methods: {
     onShowModeChange (val) {
@@ -197,6 +226,7 @@ export default {
       if (this.route.path === '/') return 'Home'
       if (this.route.path === '/project/donate') return 'Donate'
       if (this.route.path === '/demo') return 'Demo list'
+      if (this.route.path === '/component/coursegrid') return '课程信息'
       return this.componentName ? `Demo/${this.componentName}` : 'Demo/~~'
     }
   },
@@ -212,7 +242,11 @@ export default {
       showMode: 'push',
       showModeValue: 'push',
       showPlacement: 'left',
-      showPlacementValue: 'left'
+      showPlacementValue: 'left',
+      menus: {
+        menu1: 'Take Photo',
+        menu2: 'Choose from photos'
+      },
     }
   }
 }
@@ -326,5 +360,8 @@ html, body {
 }
 .menu-title {
   color: #888;
+}
+.overwrite-title-demo {
+  margin-top: 5px;
 }
 </style>
