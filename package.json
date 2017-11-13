@@ -24,7 +24,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js && rimraf docs/demos/v2/ && mkdirp docs/demos/v2 && cp -r docs/demos/temp/* docs/demos/v2/",
+    //"build": "node build/build.js && rimraf docs/demos/v2/ && mkdirp docs/demos/v2 && cp -r docs/demos/temp/* docs/demos/v2/",
+    "build": "node build/build.js",
     "build:cdn": "node build/build.js --cdn && rimraf docs/demos/v2/ && mkdirp docs/demos/v2 && cp -rf docs/demos/temp/* docs/demos/v2/",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
