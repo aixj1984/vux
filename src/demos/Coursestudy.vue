@@ -5,54 +5,90 @@
         <span slot="title" style="color:green;"> <badge text="100"></badge>：<span style="vertical-align:middle;">{{ $t('Messages') }}</span></span>
     </cell>
     <checklist  :options="commonList" v-model="radioValue" :max="1" @on-change="change"></checklist>
+    
     -->
+    <x-header title="slot:overwrite-title"
+          :right-options="{showMore: true}" @on-click-more="onClickMore">
+          <span  @click="drawerVisibility = !drawerVisibility">
+            <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
+          </span>
+          <div class="overwrite-title-demo" slot="overwrite-title">
+            <button-tab>
+              <button-tab-item  selected @on-item-click="closeAnswer">测试</button-tab-item>
+              <button-tab-item  @on-item-click="showAnswer">学习</button-tab-item>
+            </button-tab>
+          </div>
+        </x-header>
+
     <box gap="10px">
       <x-progress :percent="percent" :show-cancel="false"></x-progress>
     </box>
     <div class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="(item, i) in currentData" :key="i" >
-        <cell :title="$t('General')" >
-          <span slot="title" style="color:green;"> <badge :text="item.index"></badge>：<span style="vertical-align:middle;">{{ $t('Messages') }}</span></span>
-        </cell>
-        <checklist  :options="commonList" v-model="radioValue[i+1]" :max="1" @on-change="change"></checklist>
-        </div>
-        
+      <div class="swiper-wrapper">
+          <div class="swiper-slide" v-for="(item, i) in currentData" :key="i" >
+            <cell >
+              <span slot="title" style="color:green;"> <badge :text="item.index+1"></badge>：<span style="vertical-align:middle;">{{ $t('Messages') }}</span></span>
+            </cell>
+            <checklist  :options="commonList" v-model="radioValue[i+1]" :max="1" @on-change="change"></checklist>
+          </div>
+      </div>    
     </div>
-    <!-- 如果需要分页器
-    <div class="swiper-pagination"></div>
-     -->
-    
-    <!-- 如果需要导航按钮 
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-    -->
-    <!-- 如果需要滚动条 
-    <div class="swiper-scrollbar"></div>
-    -->
-    
-  </div>
+    <br/>
+    <div v-if="showAnswerModel">
+      <div>
+        <divider>参考信息</divider>
+      </div>
+      <div>
+        <cell >
+              <span slot="title" style="color:red;"> <span style="vertical-align:middle;">{{ $t('Messages') }}</span></span>
+        </cell>
+      </div>
+    </div>
 
-
+    <!--  题目从下面显示
+    <div v-transfer-dom>
+      <popup v-model="show7"  is-transparent >
+        <div style="width:100%;background-color:#fff;margin:0 auto;border-radius:5px;padding-top:2px;">
+          <div class="answerSheet">
+              <ul>
+                  <li v-for="i in 50" v-bind:class="{ hasBeenAnswer: false }" v-on:click="onItemClick(i)" ><a href="#">{{i}}</a></li>
+              </ul>
+          </div>
+        </div>
+      </popup>
+    </div>
+    -->
+    <div v-transfer-dom>
+      <popup v-model="show7"  is-transparent position="right" >
+     
+        <div style="width:210px;background-color:#fff;margin-top:0px;margin-right:4px;border-radius:5px;">
+          <br/>
+          <span slot="title" style="color:green;"><span>&nbsp;&nbsp;题目列表：</span></span>
+          <div class="answerSheet">
+              <ul>
+                  <li v-for="i in 50" v-bind:class="{ hasBeenAnswer: false }" v-on:click="onItemClick(i)" ><a href="#">{{i}}</a></li>
+              </ul>
+          </div>
+        </div>
+      </popup>
+    </div>
+  
 
   </div>
 </template>
 
 <i18n>
-Set max=1 (radio mode):
-  zh-CN: <div style ="size:25px">max=1（单选模式）asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfas</div>
+
 Reference:
   zh-CN: 相关
 See also:
   zh-CN: 参见
-General:
-  zh-CN: 通用aksldjfkasflasdjfklj_______klasdjfklasdjflkasdjflkasdjfklds:?
 Messages:
-  zh-CN: 在热量转移过程，伴随有能量形式转变的热传递是？
+  zh-CN: 在热量转移过程，___伴随有能量形式转变的热传递是？
 </i18n>
 
 <script>
-import { Group, CellBox, Checklist, Cell, Divider, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box } from 'vux'
+import { Group, CellBox,Popup, Checklist, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom} from 'vux'
 import _ from 'lodash'
 
 import Swiper3 from '../../static/swiper-3.4.2.min.js'
@@ -65,6 +101,9 @@ export default {
       this.asyncList = ['A', 'B', 'C', 'D']
     }, 3000) */
   },
+  directives: {
+    TransferDom
+  },
   components: {
     Group,
     Checklist,
@@ -73,22 +112,31 @@ export default {
     XButton,
     CellBox,
     Badge,
+    Popup,
     Swiper,
     SwiperItem,
     XProgress,
-    Box
+    Box,
+    XHeader,
+    ButtonTab, 
+    ButtonTabItem,
+    XDialog
   },
+
   data () {
     return {
+      drawerVisibility: false,
       title:"abc",
       fullValues: [],
       labelPosition: '',
       swiper_index:5,
       swiperSize : 5,
       mySwiper:[],
-      dataLength : 10 ,
+      dataLength : 15 ,
       percent: 0,
       error: '',
+      showAnswerModel:false,
+      show7 : false,
       commonList: [ 'A.热传导', 'B.热对流', 'C.对流辐射' ,'D.热辐射'],
       radioValue: ['A.热传导'],
       currentData:[],
@@ -134,6 +182,27 @@ export default {
           title : "1",
           index : 9
         }
+        ,
+        {
+          title : "1",
+          index : 10
+        },
+        {
+          title : "1",
+          index : 11
+        },
+        {
+          title : "2",
+          index : 12
+        },
+        {
+          title : "1",
+          index : 13
+        },
+        {
+          title : "1",
+          index : 14
+        }      
 
       ]
     }
@@ -141,58 +210,63 @@ export default {
   created(){
       this.percent = (this.currentIndex+1)*100/this.dataLength
       this.currentData = this.data.slice(this.currentIndex , this.currentIndex+ this.swiperSize)
-
+      console.log(this.currentData)
       this._initSwiper()
   },
   methods: {
     change (val, label) {
-      //console.log('change', val, label)
+      console.log('change', val, label)
+    },
+    onClickMore () {
+      this.show7 = true
     },
     async _initSwiper() {
         let Swiper = await Swiper3; //异步加载的
         let _this = this
         this.mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
-            loop: false,
-            onSlideChangeStart: function(swiper){
-                console.log(swiper.activeIndex);
-                console.log(_this.currentIndex)
-                console.log(_this.currentIndex+1+parseInt(swiper.activeIndex))
-                _this.percent = (_this.currentIndex+1+swiper.activeIndex)*100/_this.dataLength
-                console.log(_this.percent)
-                
-              },
-              onSliderMove: function(swiper, event){
-                if (swiper.activeIndex ==  _this.swiperSize -  1){
-                  _this.currentIndex +=  (_this.swiperSize - 1)
-                  
-                  _this.currentData = _this.data.slice(_this.currentIndex , _this.currentIndex+ _this.swiperSize)
-                }
+            loop:false,
+            effect : 'flip',
+            flip: {
+                  slideShadows : true,
+                  limitRotation : true,
+            },
+            onSlideChangeEnd: function(swiper){
+              _this.percent = (_this.currentIndex+swiper.activeIndex + 1)*100/_this.dataLength
+            },
+            onTouchEnd: function(swiper){
+              if (swiper.swipeDirection == 'next' &&   swiper.activeIndex == (_this.swiperSize -1)  && _this.currentIndex + _this.swiperSize < _this.dataLength -1  ){
+                  _this.currentIndex += _this.swiperSize
+                  let data_len = _this.swiperSize
+                  if (_this.dataLength - _this.currentIndex < _this.swiperSize  ){
+                      data_len = _this.dataLength - _this.currentIndex
+                  }
+                  _this.currentData = _this.data.slice(_this.currentIndex , _this.currentIndex+ data_len)
+                  console.log(_this.currentData)
+                  _this.mySwiper.slideTo(0, 500, true);
+                  swiper.swipeDirection = ""
+              }else if (swiper.swipeDirection == 'prev' &&   swiper.activeIndex == 0  && _this.currentIndex > 0){
+                  _this.currentIndex -= _this.swiperSize
+                  _this.currentData = _this.data.slice(_this.currentIndex  , _this.currentIndex+ _this.swiperSize)
+                  _this.mySwiper.slideTo(_this.swiperSize-1, 500, false);
+                  swiper.swipeDirection = ""
               }
-            
-            // 如果需要分页器
-            //pagination: '.swiper-pagination',
-            
-            // 如果需要前进后退按钮
-            //nextButton: '.swiper-button-next',
-            //prevButton: '.swiper-button-prev',
-            
-            // 如果需要滚动条
-            //scrollbar: '.swiper-scrollbar',
+            }
           })
     },
-    SwiperOnIndexChange (index) {
-      console.log("abbb", index)
-      this.percent = (this.currentIndex+1+index)*100/this.dataLength
-
-      if (index ==  this.swiperSize -  1){
-        this.currentIndex +=  (this.swiperSize - 1)
-        
-        this.currentData = this.data.slice(this.currentIndex , this.currentIndex+ this.swiperSize)
-        
-      }
-      this.swiper_index = 2
-
+    showAnswer(){
+      this.showAnswerModel = true
+      //alert(this.mySwiper.activeIndex)
+      
+    },
+    closeAnswer(){
+      this.showAnswerModel = false
+    },
+    onItemClick(index){
+      console.log(index)
+      this.show7 = false
+      index =  index%5
+      this.mySwiper.slideTo(index, 500, true);
     }
   },
 }
@@ -220,4 +294,23 @@ export default {
   color: #888;
   font-size: 12px;
 }
+
+.answerSheet ul{padding:10px; text-align:left;}
+.answerSheet li{ display:inline-block;margin-bottom:5px; margin-left:5px;height:30px; width:30px; line-height:30px; text-align:center; border:1px solid #e4e4e4;}
+.answerSheet li a{display:block;}
+.answerSheet li:hover{color:#389fc3;border-color: #389fc3;}
+
+ul,li{ list-style:none;}
+a{ text-decoration:none; color:#666;}
+a:hover{text-decoration:none;}
+.hover{background:#0f6c8d;}
+
+i{font-style:normal;}
+
+.hasBeenAnswer {
+	background: #5d9cec;
+	color:#fff;
+}
+
+
 </style>

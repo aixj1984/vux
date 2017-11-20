@@ -3,9 +3,6 @@
     <div v-transfer-dom>
       <loading v-model="isLoading"></loading>
     </div>
-    <div v-transfer-dom>
-      <actionsheet :menus="menus" v-model="showMenu" @on-click-menu="changeLocale"></actionsheet>
-    </div>
 
     <drawer
     width="200px;"
@@ -14,43 +11,22 @@
     :placement="showPlacementValue"
     :drawer-style="{'background-color':'#35495e', width: '200px'}">
 
-      <!-- drawer content -->
-      <div slot="drawer">
-        <group title="Drawer demo(beta)" style="margin-top:20px;">
-          <cell title="Demo" link="/demo" value="演示" @click.native="drawerVisibility = false">
-          </cell>
-          <cell title="Buy me a coffee" link="project/donate" @click.native="drawerVisibility = false">
-          </cell>
-          <cell title="Github" link="http://github.com/airyland/vux" value="Star me" @click.native="drawerVisibility = false">
-          </cell>
-        </group>
-        <group title="showMode">
-          <radio v-model="showMode" :options="['push', 'overlay']" @on-change="onShowModeChange"></radio>
-        </group>
-        <group title="placement">
-          <radio v-model="showPlacement" :options="['left', 'right']" @on-change="onPlacementChange"></radio>
-        </group>
-      </div>
-
-      <!-- main content -->
-      <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
+      <!-- main content    -->
+      <view-box ref="viewBox" :body-padding-top=" /coursestudy/.test(route.path)? '0px' : '46px' " body-padding-bottom="55px">
         
         <x-header slot="header"
         style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-        v-if="route.path != '/component/coursestudy'"
+        v-if=" !/coursestudy/.test(route.path) "
         :left-options="leftOptions"
-        :right-options="rightOptions"
         :title="title"
         :transition="headerTransition"
         @on-click-more="onClickMore">
-          <span v-if="route.path === '/' || route.path === '/component/coursegrid'" slot="overwrite-left" @click="drawerVisibility = !drawerVisibility">
-            <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
-          </span>
         </x-header>
-
+        
+        <!--
         <x-header title="slot:overwrite-title"
           style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-          v-if="route.path === '/component/coursestudy'"
+          v-if="/coursestudy/.test(route.path) "  
           :right-options="{showMore: true}" @on-click-more="onClickMore">
           <span  @click="drawerVisibility = !drawerVisibility">
             <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
@@ -62,6 +38,7 @@
             </button-tab>
           </div>
         </x-header>
+        -->
 
         <!-- remember to import BusPlugin in main.js if you use components: x-img and sticky -->
         <transition
@@ -71,18 +48,6 @@
         </transition>
 
         <tabbar class="vux-demo-tabbar" icon-class="vux-center" v-show="!isTabbarDemo" slot="bottom">
-          
-          <!--
-          <tabbar-item :link="{path:'/'}" :selected="route.path === '/'">
-            <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
-            <span slot="label">Home</span>
-          </tabbar-item>
-          
-          <tabbar-item :link="{path:'/demo'}" :selected="isDemo" badge="9">
-            <span class="demo-icon-22" slot="icon">&#xe633;</span>
-            <span slot="label"><span v-if="componentName" class="vux-demo-tabbar-component">{{componentName}}</span><span v-else>Demos</span></span>
-          </tabbar-item>
-          -->
           <tabbar-item :link="{path:'/component/coursehome'}" :selected="isDemo" >
             <span class="demo-icon-22" slot="icon">&#xe632;</span>
             <span slot="label">首页</span>
@@ -142,7 +107,7 @@ export default {
       }, 400)
     },
     onClickMore () {
-      this.showMenu = true
+      console.log("11111111111")
     },
     changeLocale (locale) {
       this.$i18n.set(locale)
@@ -165,6 +130,7 @@ export default {
   },
   watch: {
     path (path) {
+      console.log(path)
       if (path === '/component/demo') {
         this.$router.replace('/demo')
         return
@@ -199,7 +165,7 @@ export default {
     },
     leftOptions () {
       return {
-        showBack: this.route.path !== '/'
+        showBack: /courselist/.test(this.path)
       }
     },
     rightOptions () {
@@ -220,13 +186,15 @@ export default {
       return /component|demo/.test(this.route.path)
     },
     isTabbarDemo () {
-      return /tabbar/.test(this.route.path)
+     
+      return /tabbar/.test(this.route.path) || /coursestudy/.test(this.route.path)
     },
     title () {
       if (this.route.path === '/') return 'Home'
       if (this.route.path === '/project/donate') return 'Donate'
       if (this.route.path === '/demo') return 'Demo list'
       if (this.route.path === '/component/coursegrid') return '课程信息'
+      if (this.route.path === '/component/coursehome') return '欢迎使用'
       return this.componentName ? `Demo/${this.componentName}` : 'Demo/~~'
     }
   },
@@ -328,7 +296,7 @@ html, body {
 
 .router-view {
   width: 100%;
-  top: 46px;
+
 }
 .vux-pop-out-enter-active,
 .vux-pop-out-leave-active,
@@ -337,7 +305,6 @@ html, body {
   will-change: transform;
   transition: all 500ms;
   height: 100%;
-  top: 46px;
   position: absolute;
   backface-visibility: hidden;
   perspective: 1000;
