@@ -61,37 +61,19 @@
     <!--  题目从侧面显示  -->
     <div v-transfer-dom>
       <popup v-model="show7"  is-transparent position="right" >
-         
-        <div style="width:210px;background-color:#fff;margin-top:46px;margin-right:2px;border-radius:5px;">
+     
+        <div style="width:210px;background-color:#fff;margin-top:20px;margin-right:4px;border-radius:5px;">
           <br/>
           <span slot="title" style="color:green;"><span>&nbsp;&nbsp;题目列表：</span></span>
-          <div>
-            <tab :line-width=2 active-color='#fc378c' v-model="index">
-              <tab-item class="vux-center" :selected="demo2 === item" v-for="(item, index) in list2" @click="demo2 = item" :key="index">{{item}}</tab-item>
-            </tab>
-            <swiper v-model="index" height="400px" :show-dots="false">
-              <swiper-item v-for="(item, index) in list2" :key="index">
-                <div class="answerSheet">
-                    <ul>
-                      <li v-for="i in 50" v-bind:class="{ hasBeenAnswer: i%2 }" v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li>
-                    </ul>
-                </div>
-                
-              </swiper-item>
-            </swiper>
-          </div>
-
-
-          <!--
           <div class="answerSheet">
               <ul>
                   <li v-for="i in 50" v-bind:class="{ hasBeenAnswer: false }" v-on:click="onItemClick(i)" ><a href="#">{{i}}</a></li>
               </ul>
           </div>
-          -->
         </div>
       </popup>
     </div>
+    
   
 
   </div>
@@ -108,12 +90,11 @@ Messages:
 </i18n>
 
 <script>
-import { Group, CellBox,Popup, Checklist, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom, Tab, TabItem} from 'vux'
+import { Group, CellBox,Popup, Checklist, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom} from 'vux'
 import _ from 'lodash'
 
 import Swiper3 from '../../static/swiper-3.4.2.min.js'
 
-import { getAttributeListPage} from '../api/product/attribute';
 
 export default {
   mounted () {
@@ -141,10 +122,7 @@ export default {
     XHeader,
     ButtonTab, 
     ButtonTabItem,
-    XDialog,
-    Tab,
-    TabItem
-
+    XDialog
   },
 
   data () {
@@ -158,9 +136,6 @@ export default {
       mySwiper:[],
       dataLength : 15 ,
       percent: 0,
-      list2:['50', '100','150','200'],
-      demo2: '50',
-      index:0,
       error: '',
       showAnswerModel:false,
       show7 : false,
@@ -239,7 +214,6 @@ export default {
       this.currentData = this.data.slice(this.currentIndex , this.currentIndex+ this.swiperSize)
       console.log(this.currentData)
       this._initSwiper()
-      this.getAttribute()
   },
   methods: {
     change (val, label) {
@@ -295,17 +269,7 @@ export default {
       this.show7 = false
       index =  (index-1)%5
       this.mySwiper.slideTo(index, 500, true);
-    },
-    getAttribute() {
-				let para = {
-					page: 1,
-					pagesize:500
-				};
-
-				getAttributeListPage(para).then((res) => {
-					console.log(res)
-				});
-			},
+    }
   },
 }
 </script>
