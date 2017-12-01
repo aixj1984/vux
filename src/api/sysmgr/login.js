@@ -8,8 +8,6 @@ var instance = axios.create({
 });
 
 
-//instance.post(`url`, params).then(res => res.data);
-
 
 export const requestLogin = params => {
      return instance.get(`${base}/api/login`, { params: params }); 

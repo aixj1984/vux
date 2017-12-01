@@ -1,8 +1,19 @@
 //基础url
-
-let base ='http://127.0.0.1:8000'
-//let base = "http://10.0.65.119:8000"
-//let base = ''
+import axios from 'axios';
 
 
-export default base;
+let baseurl = 'http://10.0.64.39:8000'
+//let baseurl = "http://10.0.63.37:8000"
+//let baseurl = ''
+
+let syscfg = {
+    base :baseurl,
+    instance: axios.create({
+        headers: {'content-type': 'application/json;charset=UTF-8'},
+        withCredentials:true,
+        credentials: 'include'
+    })
+}
+
+
+export default syscfg;

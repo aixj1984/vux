@@ -12,11 +12,11 @@
     :drawer-style="{'background-color':'#35495e', width: '200px'}">
 
       <!-- main content    -->
-      <view-box ref="viewBox" :body-padding-top=" /coursestudy/.test(route.path)? '0px' : '46px' " body-padding-bottom="55px">
+      <view-box ref="viewBox" :body-padding-top=" (/course\/study/.test(route.path)||/course\/test/.test(route.path))? '0px' : '46px' " body-padding-bottom="55px">
         
         <x-header slot="header"
         style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-        v-if=" !/coursestudy/.test(route.path) "
+        v-if=" !(/course\/study/.test(route.path) || /course\/test/.test(route.path))"
         :left-options="leftOptions"
         :title="title"
         :transition="headerTransition"
@@ -186,8 +186,7 @@ export default {
       return /component|demo/.test(this.route.path)
     },
     isTabbarDemo () {
-     
-      return /tabbar/.test(this.route.path) || /coursestudy/.test(this.route.path)
+      return /tabbar/.test(this.route.path) || /course/.test(this.route.path)
     },
     title () {
       if (this.route.path === '/') return 'Home'
@@ -195,6 +194,7 @@ export default {
       if (this.route.path === '/demo') return 'Demo list'
       if (this.route.path === '/component/coursegrid') return '课程信息'
       if (this.route.path === '/component/coursehome') return '欢迎使用'
+      if (/courselist/.test(this.route.path)) return '试题列表'
       return this.componentName ? `Demo/${this.componentName}` : 'Demo/~~'
     }
   },

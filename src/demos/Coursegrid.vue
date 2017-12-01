@@ -1,77 +1,29 @@
 <template>
   <div>
-    <group-title>轮机基础</group-title>
-    <grid>
-      <grid-item link="/courselist/1/1" :label="$t('Go to Zhenti Xuexi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item :link="{ path: '/courselist/1/2'}" :label="$t('Go to Zhenti Kaoshi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item link="/courselist/1/3" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
-      </grid-item>
-      <grid-item link="/courselist/1/4" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Cuoti') }}</span>
-      </grid-item>
-    </grid>
-
-    <group-title>机舱管理</group-title>
-    <grid>
-      <grid-item link="/courselist/2/1" :label="$t('Go to Zhenti Xuexi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item :link="{ path: '/courselist/2/2'}" :label="$t('Go to Zhenti Kaoshi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item link="/courselist/2/3" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
-      </grid-item>
-      <grid-item link="/courselist/2/4" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Cuoti') }}</span>
-      </grid-item>
-    </grid>
-
-    <group-title>轮机管理</group-title>
-    <grid>
-      <grid-item link="/courselist/3/1" :label="$t('Go to Zhenti Xuexi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item :link="{ path: '/courselist/3/2'}" :label="$t('Go to Zhenti Kaoshi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item link="/courselist/3/3" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
-      </grid-item>
-      <grid-item link="/courselist/3/4" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Cuoti') }}</span>
-      </grid-item>
-    </grid>
-
-    <group-title>避碰与信号</group-title>
-    <grid>
-      <grid-item link="/courselist/4/1" :label="$t('Go to Zhenti Xuexi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item :link="{ path: '/courselist/4/2'}" :label="$t('Go to Zhenti Kaoshi')">
-        <img slot="icon" src="../assets/grid_icon.png">
-      </grid-item>
-      <grid-item link="/courselist/4/3" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
-      </grid-item>
-      <grid-item link="/courselist/4/4" @on-item-click="onItemClick">
-        <img slot="icon" src="../assets/grid_icon.png">
-        <span slot="label">{{ $t('Go to Cuoti') }}</span>
-      </grid-item>
-    </grid>
-    
+    <div v-for="course in Courses">
+      <group-title>{{course.Name}}</group-title>
+      <grid>
+        <grid-item :link="'/courselist/'+course.Id+'/0'" :label="$t('Go to Zhenti Xuexi')">
+          <img slot="icon" src="../assets/grid_icon.png">
+        </grid-item>
+        <grid-item :link="'/courselist/'+course.Id+'/1'" :label="$t('Go to Zhenti Kaoshi')">
+          <img slot="icon" src="../assets/grid_icon.png">
+        </grid-item>
+        <grid-item :link="'/courselist/'+course.Id+'/2'" >
+          <img slot="icon" src="../assets/grid_icon.png">
+          <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
+        </grid-item>
+        <grid-item :link="'/courselist/'+course.Id+'/4'">
+          <img slot="icon" src="../assets/grid_icon.png">
+          <span slot="label">{{ $t('Go to Cuoti') }}</span>
+        </grid-item>
+      </grid>
+    </div>
+    <div v-if="Courses.length == 0">
+      <card :header="{title: '课程提醒'}" :footer="{title: $t('Shop Detail'),link:'/component/panel'}">
+        <p slot="content" class="card-padding">{{ $t('Shop content') }}</p>
+      </card>
+    </div>
   </div>
 </template>
 
@@ -83,37 +35,78 @@ Go to Cell:
 Go to Zhenti Xuexi:
   zh-CN: 历年真题
 Go to Zhenti Kaoshi:
-  zh-CN: 顺序刷题
+  zh-CN: 海量题库
 Go to Moni Ceshi:
   zh-CN: 模拟考试 
 Go to Cuoti:
   zh-CN: 收藏题目
 
+Product details:
+  zh-CN: 商品详情
 
-Custom content:
-  zh-CN: 自定义内容
+Shop content:
+  zh-CN: 没配置显示的课程，点击下面的连接前往设置!
+
+Shop Detail:
+  zh-CN: 点击设置
+
 Custom col:
   zh-CN: 自定义列
 
 </i18n>
 
-
-
 <script>
-import { Grid, GridItem, GroupTitle } from 'vux'
+import { Grid, GridItem, GroupTitle, Card } from 'vux'
+
+import { getCourseList} from '../api/product/course';
 
 export default {
   components: {
     Grid,
     GridItem,
-    GroupTitle
+    GroupTitle,
+    Card
+  },
+  data () {
+    return {
+      title:"abc",
+      Courses: [],
+    }
+  },
+  created(){
+      this.getCustomerCourse()
   },
   methods: {
-    onItemClick () {
-      console.log('on item click')
+      onItemClick () {
+        console.log('on item click')
+      },
+      getCustomerCourse() {
+          let para = {
+            page: 1,
+            limit:500,
+            customerid:1,
+          };
+          
+          getCourseList(para).then((res) => {
+            console.log(res)
+            if (res.data.code != 0){
+              console.log("请求错误:"+ res.data.msg)
+            }else{
+                this.Courses = []
+                let _this = this
+                res.data.data.forEach(function(value){
+                  if (value.Status > 0 && value.IsDisplay == 1 ){
+                    _this.Courses.push(value)
+                  }
+                })
+            }
+          }).catch(function(error){
+					  console.log(error);
+          });
+        }
     }
   }
-}
+
 </script>
 
 <style scoped>
@@ -121,5 +114,8 @@ export default {
   display: block;
   text-align: center;
   color: #666;
+}
+.card-padding {
+  padding: 15px;
 }
 </style>
