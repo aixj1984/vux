@@ -2,7 +2,7 @@
   <div>
     <panel :header="CourseTestTitle" :footer="footer" :list="TestList" :type="type" @on-img-error="onImgError"></panel>
     <div v-if="TestList.length==0">
-      <msg :title="$t('Yeah! You make it')" :description="$t('Msg description')"  :icon="icon"></msg>
+      <msg title="非常抱歉" description="试题正在紧张的开发中，敬请期待。"  :icon="icon"></msg>
     </div>
   </div>
 </template>

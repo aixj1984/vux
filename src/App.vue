@@ -186,7 +186,8 @@ export default {
       return /component|demo/.test(this.route.path)
     },
     isTabbarDemo () {
-      return /tabbar/.test(this.route.path) || /course/.test(this.route.path)
+      ///tabbar/.test(this.route.path) ||
+      return   /course\/test/.test(this.route.path) ||  /course\/study/.test(this.route.path) 
     },
     title () {
       if (this.route.path === '/') return 'Home'

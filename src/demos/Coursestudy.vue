@@ -34,9 +34,13 @@
                       <span slot="title" style="color:blue;"> <span style="vertical-align:middle;">答案:{{ item.Answers }}</span></span>
                 </cell>
               </div>
+                 <group>
+                  <x-switch title="收藏题目（高亮表示收藏）" v-model="IsShouChang" @on-change="ShouChangClick"></x-switch>
+                </group> 
             </div>
           </div>
-      </div>    
+      </div>
+ 
     </div>
     
     <!--  题目从下面显示
@@ -66,8 +70,9 @@
             <swiper v-model="index" height="400px" :show-dots="false">
               <swiper-item v-for="(item, index) in list2" :key="index">
                 <div class="answerSheet">
-                    <ul>
-                      <li v-for="i in 50" v-bind:class="{ hasBeenAnswer: i%2 }" v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li>
+                    <ul v-if="QuestionsData.length">
+                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li>
+                      <!-- <li v-for="i in currentData.length" v-bind:class="{ hasBeenAnswer: i%2 }" v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li> -->
                     </ul>
                 </div>
               </swiper-item>
@@ -77,7 +82,17 @@
       </popup>
     </div>
 
-    <toast v-model="showToast" :time="800" :type="toastType" :text="toastMsg"></toast>
+
+    <div v-transfer-dom>
+      <confirm
+      v-model="showShouChangConfirm"
+      title="修改题目收藏"
+      @on-confirm="onConfirm">
+        <p style="text-align:center;">Are you sure?</p>
+      </confirm>
+    </div>
+
+    <toast v-model="showToast" :time="500" :type="toastType" :text="toastMsg"></toast>
   
   </div>
 </template>
@@ -89,11 +104,11 @@ Reference:
 See also:
   zh-CN: 参见
 Messages:
-  zh-CN: 在热量转移过程，___伴随有能量形式转变的热传递是？
+  zh-CN: 在热量转移过程
 </i18n>
 
 <script>
-import { Group, CellBox,Popup, Checklist, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom, Tab, TabItem,Toast} from 'vux'
+import { Group, CellBox,Popup, Checklist,Confirm, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom, Tab, TabItem,Toast,XSwitch} from 'vux'
 import _ from 'lodash'
 
 import Swiper3 from '../../static/swiper-3.4.2.min.js'
@@ -130,7 +145,9 @@ export default {
     XDialog,
     Tab,
     TabItem,
-    Toast
+    Toast,
+    XSwitch,
+    Confirm
 
   },
 
@@ -146,8 +163,8 @@ export default {
       mySwiper:null,
       dataLength : 15 ,
       percent: 0,
-      list2:['50', '100','150','200'],
-      demo2: '50',
+      list2:['1~50', '51~100'],
+      demo2: '1~50',
       index:0,
       error: '',
       showAnswerModel:false,
@@ -158,6 +175,8 @@ export default {
       currentData:[],
       currentIndex: 0,
       QuestionsData:[],
+      IsShouChang:false,
+      showShouChangConfirm:false,
       
     }
   },
@@ -171,11 +190,10 @@ export default {
   methods: {
     change (val, label) {
       console.log('change', val, label)
-      if (this.mySwiper){
+      if (this.mySwiper && label.length > 0){
         console.log('swiper_index', this.mySwiper.activeIndex)
         console.log('question', this.currentData)
         if (!this.showAnswerModel){
-          
           if (this.currentData[this.mySwiper.activeIndex].Answers.length >0){
             if (val == this.currentData[this.mySwiper.activeIndex].Answers['0']){
               this.toastMsg = "选对了"
@@ -192,6 +210,18 @@ export default {
         //console.log(this.$refs.OptionList[this.mySwiper.activeIndex].getFullValue())
       }
       
+    },
+    ShouChangClick(newVal){
+      console.log(newVal)
+      this.IsShouChang = false
+      newVal = false
+    },
+    onConfirm (msg) {
+      console.log('on confirm')
+      if (msg) {
+        this.show4 = true
+        alert(msg)
+      }
     },
     onClickMore () {
       this.show7 = true
@@ -241,8 +271,17 @@ export default {
     onItemClick(index){
       console.log(index)
       this.show7 = false
-      index =  (index-1)%5
-      this.mySwiper.slideTo(index, 500, true);
+      let swiper_index =  (index-1)%5
+      console.log(this.currentIndex)
+      if (index>= this.currentIndex+1 && index <= this.currentIndex + this.swiperSize){
+          this.mySwiper.slideTo(swiper_index, 500, true);
+      }else{
+        this.currentIndex = Math.floor((index-1)/5)*5
+        console.log(this.currentIndex)
+        this.currentData = this.QuestionsData.slice(this.currentIndex , this.currentIndex+ this.swiperSize)
+        this.mySwiper.slideTo(swiper_index, 500, true);
+        console.log(this.currentData)
+      }
     },
     getTestQuestion() {
 				let para = {
@@ -288,6 +327,11 @@ export default {
                 _this.currentData = _this.QuestionsData.slice(_this.currentIndex , _this.currentIndex+ get_len)
                 _this._initSwiper()
                 //console.log(111,_this.currentData)
+                if (_this.dataLength > 50){
+                  _this.list2 = ['1~50', '51~100']
+                }else if (_this.dataLength <= 50){
+                  _this.list2 = ['1~50']
+                }
             }
           }
 				});
