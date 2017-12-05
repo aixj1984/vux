@@ -12,7 +12,7 @@
     :drawer-style="{'background-color':'#35495e', width: '200px'}">
 
       <!-- main content    -->
-      <view-box ref="viewBox" :body-padding-top=" (/course\/study/.test(route.path)||/course\/test/.test(route.path))? '0px' : '46px' " body-padding-bottom="55px">
+      <view-box ref="viewBox" :body-padding-top="(/course\/study/.test(route.path)||/course\/test/.test(route.path))? '0px' : '46px' " body-padding-bottom="55px">
         
         <x-header slot="header"
         style="width:100%;position:absolute;left:0;top:0;z-index:100;"
@@ -56,9 +56,9 @@
             <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
             <span slot="label">课程</span>
           </tabbar-item>
-          <tabbar-item :link="{path:'/project/donate'}" :selected="route.path === '/project/donate'" show-dot>
+          <tabbar-item :link="{path:'/myprofile'}" :selected="route.path === '/myprofile'" show-dot>
             <span class="demo-icon-22" slot="icon">&#xe630;</span>
-            <span slot="label">Donate</span>
+            <span slot="label">我的</span>
           </tabbar-item>
         </tabbar>
       </view-box>
@@ -165,7 +165,7 @@ export default {
     },
     leftOptions () {
       return {
-        showBack: /courselist/.test(this.path)
+        showBack: /courselist/.test(this.path) || /customer/.test(this.path)
       }
     },
     rightOptions () {
@@ -196,7 +196,13 @@ export default {
       if (this.route.path === '/component/coursegrid') return '课程信息'
       if (this.route.path === '/component/coursehome') return '欢迎使用'
       if (/courselist/.test(this.route.path)) return '试题列表'
-      return this.componentName ? `Demo/${this.componentName}` : 'Demo/~~'
+      if (this.route.path === '/myprofile') return "我的设置"
+      if (this.route.path === '/customer/course/buy') return "课程购买"
+      if (this.route.path === '/customer/test/record') return "测试记录"
+      if (this.route.path === '/customer/course/setting') return "课程设置"
+      if (this.route.path === '/customer/donate') return "捐赠鼓励"
+
+      return this.componentName ? `Demo/${this.componentName}` : '~~~/~~~'
     }
   },
   data () {

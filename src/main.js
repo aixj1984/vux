@@ -9,6 +9,8 @@ import vuexI18n from 'vuex-i18n'
 import VueRouter from 'vue-router'
 import { sync } from 'vuex-router-sync'
 
+import 'styles/font-awesome-4.7.0/css/font-awesome.min.css'
+
 Vue.use(VueRouter)
 Vue.use(Vuex)
 

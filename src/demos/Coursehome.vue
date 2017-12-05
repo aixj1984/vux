@@ -1,7 +1,7 @@
 <template>
   <div>
     <swiper loop auto :list="demo06_list" :index="demo06_index" @on-index-change="demo06_onIndexChange"></swiper>
-    <panel :header="$t('List of content with Title')" :footer="footer" :list="list" :type="type" @on-img-error="onImgError"></panel>
+    <panel header="推荐文章" :footer="footer" :list="list" :type="type" @on-img-error="onImgError"></panel>
   </div>
 </template>
 
@@ -23,28 +23,14 @@ const baseList = [{
   fallbackImg: 'https://static.vux.li/demo/3.jpg'
 }]
 
-const imgList = [
-  'http://placeholder.qiniudn.com/800x300/FF3B3B/ffffff',
-  'http://placeholder.qiniudn.com/800x300/FFEF7D/ffffff',
-  'http://placeholder.qiniudn.com/800x300/8AEEB1/ffffff'
-]
+
 
 const urlList = baseList.map((item, index) => ({
-  url: 'http://m.baidu.com',
+  url: '#',
   img: item.img,
   fallbackImg: item.fallbackImg,
   title: `(可点击)${item.title}`
 }))
-
-const demoList = imgList.map((one, index) => ({
-  url: 'javascript:',
-  img: one
-}))
-
-const only2ClickList = baseList.slice(0, 2).map(item => {
-  item.url = 'http://m.baidu.com'
-  return item
-})
 
 export default {
   components: {
@@ -61,23 +47,8 @@ export default {
 
   },
   methods: {
-    onSwiperItemIndexChange (index) {
-      console.log('demo item change', index)
-    },
-    demo01_onIndexChange (index) {
-      this.demo01_index = index
-    },
-    demo05_onIndexChange (index) {
-      this.demo05_index = index
-    },
-    demo05_onLoad (id) {
-      this.demo05_list = id === 1 ? baseList : demoList
-    },
     demo06_onIndexChange (index) {
       this.demo06_index = index
-    },
-    demo07_onIndexChange (index) {
-      this.demo07_index = index
     },
     onImgError (item, $event) {
       console.log(item, $event)
@@ -85,18 +56,8 @@ export default {
   },
   data () {
     return {
-      demo01_list: baseList,
-      demo02_list: demoList,
-      demo03_list: demoList,
-      demo04_list: imgList,
-      demo05_list: [],
       demo06_list: urlList,
-      demo07_list: only2ClickList,
-      demo01_index: 0,
-      demo02_index: 1,
-      demo05_index: 0,
       demo06_index: 0,
-      demo07_index: 0,
       swiperItemIndex: 1,
       type: '4',
       list: [{
@@ -104,13 +65,13 @@ export default {
         fallbackSrc: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
         title: '模拟考试',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-        url: '/component/cell'
+        url: '/customer/article/detail/1'
       }, {
         src: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
         title: '历届真题',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         url: {
-          path: '/component/radio',
+          path: '/customer/article/detail/2',
           replace: false
         },
         meta: {
@@ -121,7 +82,7 @@ export default {
       }],
       footer: {
         title: this.$t('more'),
-        url: 'http://vux.li'
+        url: '/customer/article/list'
       }
     }
   }

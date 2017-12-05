@@ -13,14 +13,14 @@
           <img slot="icon" src="../assets/grid_icon.png">
           <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
         </grid-item>
-        <grid-item :link="'/courselist/'+course.Id+'/4'">
+        <grid-item :link="'/customer/collect/'+course.Id">
           <img slot="icon" src="../assets/grid_icon.png">
           <span slot="label">{{ $t('Go to Cuoti') }}</span>
         </grid-item>
       </grid>
     </div>
     <div v-if="Courses.length == 0">
-      <card :header="{title: '课程提醒'}" :footer="{title: $t('Shop Detail'),link:'/component/panel'}">
+      <card :header="{title: '课程提醒'}" :footer="{title: '点击设置',link:'/customer/course/buy'}">
         <p slot="content" class="card-padding">{{ $t('Shop content') }}</p>
       </card>
     </div>

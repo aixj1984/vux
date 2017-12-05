@@ -16,9 +16,10 @@ import { Divider } from 'vux'
 export default {
   components: {
     Divider
-  }
+  },
 }
 </script>
+
 
 <style scoped>
 .donate {
