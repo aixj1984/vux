@@ -12,35 +12,18 @@
     :drawer-style="{'background-color':'#35495e', width: '200px'}">
 
       <!-- main content    -->
-      <view-box ref="viewBox" :body-padding-top="(/course\/study/.test(route.path)||/course\/test/.test(route.path))? '0px' : '46px' " body-padding-bottom="55px">
+      <view-box ref="viewBox" :body-padding-top="checkShowView()? '0px' : '46px' " body-padding-bottom="55px">
         
         <x-header slot="header"
         style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-        v-if=" !(/course\/study/.test(route.path) || /course\/test/.test(route.path))"
+        v-if=" !checkShowView()"
         :left-options="leftOptions"
         :title="title"
         :transition="headerTransition"
         @on-click-more="onClickMore">
         </x-header>
         
-        <!--
-        <x-header title="slot:overwrite-title"
-          style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-          v-if="/coursestudy/.test(route.path) "  
-          :right-options="{showMore: true}" @on-click-more="onClickMore">
-          <span  @click="drawerVisibility = !drawerVisibility">
-            <x-icon type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
-          </span>
-          <div class="overwrite-title-demo" slot="overwrite-title">
-            <button-tab>
-              <button-tab-item selected>学习</button-tab-item>
-              <button-tab-item>测试</button-tab-item>
-            </button-tab>
-          </div>
-        </x-header>
-        -->
 
-        <!-- remember to import BusPlugin in main.js if you use components: x-img and sticky -->
         <transition
         @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')" 
         :name="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
@@ -92,6 +75,19 @@ export default {
     GridItem
   },
   methods: {
+    checkShowView(){
+      if (/course\/study/.test(this.route.path)){
+        return true
+      }
+      if ( /course\/test/.test(this.route.path)){
+        return true
+      }
+      if ( /customer\/collect/.test(this.route.path)){
+        return true
+      }
+      
+      return false
+    },
     onShowModeChange (val) {
       /** hide drawer before changing showMode **/
       this.drawerVisibility = false
@@ -183,11 +179,10 @@ export default {
       }
     },
     isDemo () {
-      return /component|demo/.test(this.route.path)
+      return /component|demo/.test(this.route.path) 
     },
     isTabbarDemo () {
-      ///tabbar/.test(this.route.path) ||
-      return   /course\/test/.test(this.route.path) ||  /course\/study/.test(this.route.path) 
+      return  this.checkShowView()
     },
     title () {
       if (this.route.path === '/') return 'Home'

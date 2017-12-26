@@ -1,7 +1,6 @@
 <template>
   <div>
     <div>
-      <!--<load-more tip="cell-bordered=false" :show-loading="false" background-color="#fbf9fe"></load-more>-->
       <x-table :cell-bordered="true" :content-bordered="true" style="background-color:#fff;">
         <thead>
           <tr style="background-color: #F7F7F7">
@@ -11,15 +10,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>2017-12-05</td>
-            <td>船舶驾驶与管理</td>
-            <td>58/160=98</td>
-          </tr>
-          <tr>
-            <td>Banana</td>
-            <td>$1.20</td>
-            <td> x 2</td>
+          <tr v-for="(item, i) in testData" :key="i">
+            <td>{{item.AddTime.substring(0,10)}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.RightNum}}/{{item.QuestionNum}}={{item.RightNum*100/item.QuestionNum}}</td>
           </tr>
         </tbody>
       </x-table>
@@ -30,10 +24,38 @@
 <script>
 import { XTable, LoadMore } from 'vux'
 
+import { getTestResultList} from '../api/product/test';
+
+
 export default {
   components: {
     XTable,
     LoadMore
+  },
+  data () {
+    return {
+      drawerVisibility: false, 
+      testData:[],     
+    }
+  },
+  created(){
+      this.getTestResult()
+  },
+  methods: {
+    getTestResult(index, page){
+      let para = {
+					page: 1,
+					limit:200,
+				};
+        let _this = this
+        this.testData = []
+				getTestResultList(para).then((res) => {
+          //console.log(res)
+          if (res.data && res.data.code == 0){
+            _this.testData = res.data.data
+          }
+        })
+    },
   }
 }
 </script>

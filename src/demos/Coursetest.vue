@@ -16,11 +16,13 @@
           </div>
           -->
     </x-header>
-
-    <box gap="10px">
+    <div v-if="currentData.length==0">
+      <msg title="有情提示" description="没有收藏该科目的题目"  :icon="icon"></msg>
+    </div>
+    <box gap="10px" v-if="currentData.length>0">
       <x-progress :percent="percent" :show-cancel="false"></x-progress>
     </box>
-    <div class="swiper-container" >
+    <div class="swiper-container" v-if="currentData.length>0">
       <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(item, i) in currentData" :key="i" >
             <cell >
@@ -38,7 +40,7 @@
                 </cell>
               </div>
               <group>
-                <x-switch title="收藏题目（高亮表示收藏）" v-model="IsShouChang" @on-change="ShouChangClick"></x-switch>
+                <x-switch title="收藏题目（高亮表示收藏）" v-model="item.IsCollect" @on-change="ShouChangClick"></x-switch>
               </group> 
             </div>
           </div>
@@ -86,6 +88,7 @@
     </div>
 
     <toast v-model="showToast" :time="500" :type="toastType" :text="toastMsg"></toast>
+    <toast v-model="showPositionValue" type="text" :time="800" is-show-mask :text="alarmtext" position="top"></toast>
   
   </div>
 </template>
@@ -101,13 +104,13 @@ Messages:
 </i18n>
 
 <script>
-import { Group, CellBox,Popup, Checklist,Confirm, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom, Tab, TabItem,Toast,XSwitch} from 'vux'
+import { Group, CellBox,Popup, Checklist,Msg,Confirm, Cell, Divider,XDialog, XButton,FormPreview,Badge,Swiper,SwiperItem,XProgress,Box ,XHeader,ButtonTab, ButtonTabItem,TransferDom, Tab, TabItem,Toast,XSwitch} from 'vux'
 import _ from 'lodash'
 
-import Swiper3 from '../../static/swiper-3.4.2.min.js'
+import Swiper3 from '../../static/js/swiper-4.0.7/js/swiper.js'
+//import Swiper3 from '../../static/swiper-3.4.2.min.js'
 
-
-import { getTestQuestionList} from '../api/product/question';
+import { getTestQuestionList,saveCollectQuestion,delCollectQuestion} from '../api/product/question';
 
 import { addTestResult} from '../api/product/test';
 
@@ -130,6 +133,7 @@ export default {
   components: {
     Group,
     Checklist,
+    Msg,
     Cell,
     Divider,
     XButton,
@@ -158,6 +162,7 @@ export default {
       CourseId:0,
       TestId:0,
       fullValues: [],
+      icon:'info',
       labelPosition: '',
       swiperSize : 5,
       mySwiper:null,
@@ -179,6 +184,8 @@ export default {
       showSubmit:false,
       testAnswer:"",
       isSubmit:false,
+      showPositionValue:false,
+      alarmtext:"",
       
     }
   },
@@ -219,19 +226,47 @@ export default {
         })
     },
     change (val, label) {
-      /*
-      console.log('change', val, label)
-      if (this.mySwiper && label.length > 0){
-        console.log('swiper_index', this.mySwiper.activeIndex)
-        console.log('question', this.currentData)
-        this.QuestionsData[this.mySwiper.activeIndex + this.currentIndex].userAnsers  = val[0]
-      }*/
+
       
     },
     ShouChangClick(newVal){
       console.log(newVal)
-      this.IsShouChang = false
-      newVal = false
+      let para = {
+        QuestionId: this.currentData[this.mySwiper.activeIndex].Id,
+        CourseId : parseInt(this.CourseId),
+      }
+      if (newVal){
+        this.saveCollect(para)
+      }else{
+        this.delCollect(para)
+      }
+    },
+
+    saveCollect(para){
+      saveCollectQuestion(para).then((res) => {
+        if (res.data.code == 0){
+            this.alarmtext = "设置成功"
+            this.showPositionValue = true
+        }else{
+            this.alarmtext = res.data.msg
+            this.showPositionValue = true
+        }
+      }).catch(function(error){
+        console.log(error)
+      })
+    },
+    delCollect(para){
+      delCollectQuestion(para).then((res) => {
+        if (res.data.code == 0){
+            this.alarmtext = "设置成功"
+            this.showPositionValue = true
+        }else{
+            this.alarmtext = res.data.msg
+            this.showPositionValue = true
+        }
+      }).catch(function(error){
+        console.log(error)
+      })
     },
 
     submitClick(){
@@ -291,31 +326,34 @@ export default {
                   slideShadows : true,
                   limitRotation : true,
             },
-            onSlideChangeEnd: function(swiper){
-              _this.percent = (_this.currentIndex+swiper.activeIndex + 1)*100/_this.dataLength
-              console.log("aaa",_this.currentIndex+swiper.activeIndex + 1)
-              if (_this.percent == 100){
-                  _this.showSubmit = true
-              }else{
-                _this.showSubmit = false
-              }
-            },
-            onTouchEnd: function(swiper){
-              if (swiper.swipeDirection == 'next' &&   swiper.activeIndex == (_this.swiperSize -1) && (_this.currentIndex + swiper.activeIndex+1)< _this.QuestionsData.length){
-                  _this.currentIndex += _this.swiperSize
-                  let data_len = _this.swiperSize
-                  if (_this.dataLength - _this.currentIndex < _this.swiperSize  ){
-                      data_len = _this.dataLength - _this.currentIndex
-                  }
-                  _this.currentData = _this.QuestionsData.slice(_this.currentIndex , _this.currentIndex+ data_len)
-                  console.log(_this.currentData)
-                  _this.mySwiper.slideTo(0, 500, true);
-                  swiper.swipeDirection = ""
-              }else if (swiper.swipeDirection == 'prev' &&   swiper.activeIndex == 0  && _this.currentIndex > 0){
-                  _this.currentIndex -= _this.swiperSize
-                  _this.currentData = _this.QuestionsData.slice(_this.currentIndex  , _this.currentIndex+ _this.swiperSize)
-                  _this.mySwiper.slideTo(_this.swiperSize-1, 500, false);
-                  swiper.swipeDirection = ""
+            on:{
+              slideChange: function(){
+                _this.percent = (_this.currentIndex+_this.mySwiper.activeIndex + 1)*100/_this.dataLength
+                if (_this.percent == 100){
+                    _this.showSubmit = true
+                }else{
+                  _this.showSubmit = false
+                }
+              },
+              touchEnd: function(){
+                if (this.swipeDirection == 'next' &&   this.activeIndex == (_this.swiperSize -1) && (_this.currentIndex + this.activeIndex+1)< _this.QuestionsData.length){
+                    _this.currentIndex += _this.swiperSize
+                    let data_len = _this.swiperSize
+                    if (_this.dataLength - _this.currentIndex < _this.swiperSize  ){
+                        data_len = _this.dataLength - _this.currentIndex
+                    }
+                    _this.currentData = _this.QuestionsData.slice(_this.currentIndex , _this.currentIndex+ data_len)
+                    console.log(_this.currentData)
+                    _this.mySwiper.updateSlides();
+                    _this.mySwiper.slideTo(0, 500, true);
+                    this.swipeDirection = ""
+                }else if (this.swipeDirection == 'prev' &&   this.activeIndex == 0  && _this.currentIndex > 0){
+                    _this.currentIndex -= _this.swiperSize
+                    _this.currentData = _this.QuestionsData.slice(_this.currentIndex  , _this.currentIndex+ _this.swiperSize)
+                    _this.mySwiper.updateSlides();
+                    _this.mySwiper.slideTo(_this.swiperSize-1, 500, false);
+                    this.swipeDirection = ""
+                }
               }
             }
           })
@@ -338,7 +376,7 @@ export default {
     getTestQuestion() {
 				let para = {
 					page: 1,
-					pagesize:200,
+					limit:200,
           courseid:this.CourseId,
           testid:this.TestId,
 				};
@@ -347,6 +385,7 @@ export default {
         this.currentData.splice(0);
 				getTestQuestionList(para).then((res) => {
           if (res.data.data){
+            console.log(res.data.data)
             res.data.data.forEach(function(value,index){
               let options = JSON.parse(value.Options)
               if (!options || options.length == 0){
@@ -360,9 +399,11 @@ export default {
               let question = {
                 title:value.Title,
                 index : index,
+                Id : value.Id,
                 Options : new_options,
                 Answers : value.Answer.length>0?value.Answer.split(":"):[],
                 Chooses : [],
+                IsCollect : value.IsCollect >0? true: false,
                 IsRight : 1,
               }
               _this.QuestionsData.push(question)
