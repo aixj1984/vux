@@ -17,7 +17,7 @@
           -->
     </x-header>
     <div v-if="currentData.length==0">
-      <msg title="有情提示" description="没有收藏该科目的题目"  :icon="icon"></msg>
+      <msg title="非常抱歉" description="该测试还未设置题目"  :icon="icon"></msg>
     </div>
     <box gap="10px" v-if="currentData.length>0">
       <x-progress :percent="percent" :show-cancel="false"></x-progress>

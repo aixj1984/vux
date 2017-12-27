@@ -1,17 +1,18 @@
 <template>
   <div>
- 
+    <div v-if="needBuyList.length >0 ">
+      <checklist ref="PurchaseObject" title="还未购买的课程(多买多送)" :options="needBuyList" label-position="left" v-model="chooseNeedBuy" @on-change="change"></checklist>
+  
 
-    <checklist ref="PurchaseObject" title="还未购买的课程(多买多送)" :options="needBuyList" label-position="left" v-model="chooseNeedBuy" @on-change="change"></checklist>
- 
+      <group>
+        <cell-box>课程总计：<span style="color:blue">{{ Amount }} 元</span>&nbsp;&nbsp; 折后：<span style="color:red">{{ DiscountAmount }} 元</span></cell-box>
+      </group>
+      <div style="padding:15px;">
+        <x-button type="primary" @click.native="Purchase()">购买课程</x-button>
+      </div>
 
-    <group>
-      <cell-box>课程总计：<span style="color:blue">{{ Amount }} 元</span>&nbsp;&nbsp; 折后：<span style="color:red">{{ DiscountAmount }} 元</span></cell-box>
-    </group>
-
-    <div style="padding:15px;">
-      <x-button type="primary" @click.native="Purchase()">购买课程</x-button>
     </div>
+
     <checklist  title="已经购买的课程" disabled :options="buyList" label-position="left" v-model="chooseBuy" ></checklist>
     <toast v-model="showPositionValue" type="text" :time="800" is-show-mask :text="alarmtext" position="top"></toast>
 
@@ -23,7 +24,7 @@
 import { Group, CellBox, Checklist, Cell, Divider, XButton,Toast } from 'vux'
 import _ from 'lodash'
 
-import { getCourseList,saveCoursesSetting} from '../api/product/course';
+import { getCourseList,saveCoursesSetting,purchaseCourses} from '../api/product/course';
 
 
 export default {
@@ -63,27 +64,24 @@ export default {
         chooses +=  item.value.toString()  + ","
         console.log(chooses)
       })
-      /*
+      
       let para = {
-        DefalutCourses : chooses.substr(0,chooses.length-1),
-        CustomerId : 1,
+        PurchaseCourses : chooses.substr(0,chooses.length-1),
       }
-      saveCoursesSetting(para).then((res) => {
+      let _this = this
+      purchaseCourses(para).then((res) => {
         console.log(res)
         if (res.data.code == 0){
-            this.alarmtext = "保存成功"
-            this.showPositionValue = true
+            _this.alarmtext = "购买成功"
+            _this.showPositionValue = true
         }else{
-            this.alarmtext = res.data.msg
-            this.showPositionValue = true
-            this.getCustomerCourse()
+            _this.alarmtext = res.data.msg
+            _this.showPositionValue = true
         }
+        _this.getAllCourses()
       }).catch(function(error){
         console.log(error)
-      })*/
-      this.alarmtext = "购买成功"
-      this.showPositionValue = true
-
+      })
     },
     getAllCourses() {
       let para = {

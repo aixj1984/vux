@@ -13,3 +13,8 @@ export const getCoursesList = params => {
 export const saveCoursesSetting = params => {
     return syscfg.instance.put(`${syscfg.base}/api/course/setting`, params); 
 };
+
+
+export const purchaseCourses = params => {
+    return syscfg.instance.put(`${syscfg.base}/api/course/purchase`, params); 
+};

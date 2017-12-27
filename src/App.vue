@@ -12,18 +12,8 @@
     :drawer-style="{'background-color':'#35495e', width: '200px'}">
 
       <!-- main content    -->
-      <view-box ref="viewBox" :body-padding-top="checkShowView()? '0px' : '46px' " body-padding-bottom="55px">
-        
-        <x-header slot="header"
-        style="width:100%;position:absolute;left:0;top:0;z-index:100;"
-        v-if=" !checkShowView()"
-        :left-options="leftOptions"
-        :title="title"
-        :transition="headerTransition"
-        @on-click-more="onClickMore">
-        </x-header>
-        
-
+      <view-box ref="viewBox" :body-padding-top="'0px' " body-padding-bottom="55px">
+      
         <transition
         @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')" 
         :name="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
@@ -142,7 +132,25 @@ export default {
       } else {
         this.box && this.box.removeEventListener('scroll', this.handler, false)
       }
+    },
+    '$route': function(to,from) {
+
+        let title = "内河轮机考试"
+        if (this.route.path === '/')  title = '主页'
+        if (this.route.path === '/project/donate') title = '捐赠'
+        if (this.route.path === '/demo') title =  'Demo list'
+        if (this.route.path === '/component/coursegrid') title =  '课程信息'
+        if (this.route.path === '/component/coursehome') title =  '欢迎使用'
+        if (/courselist/.test(this.route.path)) title =  '试题列表'
+        if (this.route.path === '/myprofile') title =  "我的设置"
+        if (this.route.path === '/customer/course/buy') title =  "课程购买"
+        if (this.route.path === '/customer/test/record') title =  "测试记录"
+        if (this.route.path === '/customer/course/setting') title =  "课程设置"
+        if (this.route.path === '/customer/donate') title =  "捐赠鼓励"
+
+        document.title = title
     }
+    
   },
   computed: {
     ...mapState({

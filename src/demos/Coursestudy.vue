@@ -71,7 +71,7 @@
               <swiper-item v-for="(item, index) in list2" :key="index">
                 <div class="answerSheet">
                     <ul v-if="QuestionsData.length">
-                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li>
+                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-on:click="onItemClick(i)" ><a href="javascript:void(0);">{{i+index*50}}</a></li>
                       <!-- <li v-for="i in currentData.length" v-bind:class="{ hasBeenAnswer: i%2 }" v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li> -->
                     </ul>
                 </div>
@@ -313,10 +313,8 @@ export default {
       this.showAnswerModel = false
     },
     onItemClick(index){
-      console.log(index)
-      this.show7 = false
+      this.showQuestionList = false
       let swiper_index =  (index-1)%5
-      console.log(this.currentIndex)
       if (index>= this.currentIndex+1 && index <= this.currentIndex + this.swiperSize){
           this.mySwiper.slideTo(swiper_index, 500, true);
       }else{
