@@ -1,37 +1,70 @@
 <template>
   <div >
     <div style="padding:15px">
-<dl class="rule">
-<dd>欢迎您加入享脉家为您倾情筹备的第一届互联网展业大赛，十万元现金大奖已备妥，只等您来赢！提货还可得分润，创业比赛两不停！快快查看大赛规则，开始您的享脉家旅程吧！</dd>
- 
-<dl>一、竞赛标的</dl>
-<dd>本次大赛的竞赛标的为：比赛期间内取得的脉点数，也就是说大赛以各位在比赛期间最终取得脉点数进行排名，脉点多者胜出。</dd>
-<dd>脉点是您在享脉家提货并付款或者为享脉家推荐新的会员而取得的业绩点数，您的持续登陆或关注也将为您带来脉点，享脉家的特别活动也有了可能帮您赢取脉点。</dd>
- 
-<dl>二、比赛时间</dl>
-<dd>本次大赛的业绩统计周期为:2017年12月18日至2018年3月18日。您在此期间内任何时点均可参与本次展业大赛，享脉家自动为您计算大赛脉点。大赛统一截止时间为2018年3月18日，考虑退货等因素，大赛成绩公布时间为2018年3月25日。</dd>
- 
-<dl>三、大赛奖项</dl>
-<dd>一等奖 1名 奖金10万元，享脉家脉点10000点；</dd>
-<dd>二等奖 2名 奖金1万元，享脉家脉点5000点；</dd>
-<dd>三等奖 5名 奖金2000元，享脉家脉点2000点；</dd>
-<dd>四等奖 20名 奖金500元，享脉家脉点500点；</dd>
-<dd>五等奖 100名 享脉家脉点 200点；</dd>
-<dd>参与奖不限 享脉家脉点50点；</dd>
-<dl>四、脉点计算规则</dl>
-<dd>参加本次展业大赛的共有四个产品，详见大赛专区页面，每个产品均标明了该产品提货并付款后可取得的脉点数，以您实际提货并付款的产品所对应的脉点数进行累加。</dd>
-<dd>若您推荐一名好友注册享脉家，您可得到10个脉点，若您推荐的好友提货并付款取得脉点，您可得到这位好友提货脉点的10%作为您的卖点奖励。</dd>
- 
-<dl>五、常见问题</dl>
-<dd>a. 我怎样参赛？ 只要您在大赛期间注册成为享脉家会员，便可自动参与本次展业大赛，快快加油哦！</dd>
-<dd>b. 我怎样提货？您可通过大赛专区点击商品图片进入提货界面，或点击购物车，查看更多商品，点击商品图片进入提货界面。</dd>
-<dd>c. 我怎样推荐好友？您可点击推荐界面，点击分享后用微信发送给您的好友或朋友圈，您的朋友点击您分享的链接关注并注册享脉家公众号以后，享脉家自动记录为您推荐的好友。或者您点击推荐界面，生成您的推荐二维码，当您的朋友通过扫码进入享脉家，享脉家也可自动记录该好友为您推荐的好友。</dd>
-<dd>d. 我怎么知道我的排名? 点击帮助中心，进入查看大赛排名界面。</dd>
-<dd>e. 我如果获奖了怎么拿奖金？ 大赛结束后，您若获奖，奖金将在享脉家公布大赛结果后的三个工作日结算到您的账户中。</dd>
-<dd>f．大赛结束之后脉点就没有了么? 大赛期间的脉点值作为比赛用途，大赛期间取得的脉点将进入您的终身脉点积累值，终身脉点值决定您在享脉家的分润等级。您可查看……</dd>
-<dd>更多享脉家使用说明，请点击帮助中心~~~</dd>
-</dl>
+      <h3> {{ArticleDetail.Title}} </h3>
+      <div>
+        <div>来源： {{ArticleDetail.Source}} |  发布时间：{{ArticleDetail.PublicTime}}</div>
+      </div>
+      <div v-html="getConent(ArticleDetail.Content)">
+       
+      </div>
     </div>
   </div>
 </template>
 
+
+
+<script>
+import { Swiper, GroupTitle, SwiperItem, XButton, Divider, Panel, Group, Radio } from 'vux'
+
+import { getArticleDetail} from '../api/article/article';
+
+
+
+export default {
+  components: {
+    Swiper,
+    SwiperItem,
+    GroupTitle,
+    XButton,
+    Divider,
+    Panel, 
+    Group, 
+    Radio
+  },
+  ready () {
+
+  },
+  data () {
+    return {
+      ArticleDetail:{},
+    }
+  },
+  created () {
+    this.getArticle()
+  },
+  methods: {
+    getConent(encode_content){
+        let Base64 = require('js-base64').Base64;
+        console.log(encode_content)
+        return Base64.decode(encode_content)
+    },
+
+    getArticle(){
+        let para = {
+          articleid: this.$route.params.id
+        };
+        getArticleDetail(para).then((res) => {
+          //console.log(res)
+          if (res.data.code != 0){
+            console.log("请求错误:"+ res.data.msg)
+          }else{
+              this.ArticleDetail = res.data.data
+          }
+        }).catch(function(error){
+          console.log(error);
+        });
+    }
+  }
+}
+</script>

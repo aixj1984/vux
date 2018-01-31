@@ -29,7 +29,7 @@
             <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
             <span slot="label">课程</span>
           </tabbar-item>
-          <tabbar-item :link="{path:'/myprofile'}" :selected="route.path === '/myprofile'" show-dot>
+          <tabbar-item :link="{path:'/myprofile'}" :selected="route.path === '/myprofile'">
             <span class="demo-icon-22" slot="icon">&#xe630;</span>
             <span slot="label">我的</span>
           </tabbar-item>
@@ -147,6 +147,7 @@ export default {
         if (this.route.path === '/customer/test/record') title =  "测试记录"
         if (this.route.path === '/customer/course/setting') title =  "课程设置"
         if (this.route.path === '/customer/donate') title =  "捐赠鼓励"
+        if (this.route.path === '/article/list') title = "文章列表"
 
         document.title = title
     }

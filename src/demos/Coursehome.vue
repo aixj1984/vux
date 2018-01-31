@@ -1,12 +1,15 @@
 <template>
   <div>
     <swiper loop auto :list="demo06_list" :index="demo06_index" @on-index-change="demo06_onIndexChange"></swiper>
-    <panel header="推荐文章" :footer="footer" :list="list" :type="type" @on-img-error="onImgError"></panel>
+    <panel header="推荐文章" :footer="footer" :list="ArticleList" :type="type" @on-img-error="onImgError"></panel>
   </div>
 </template>
 
 <script>
 import { Swiper, GroupTitle, SwiperItem, XButton, Divider, Panel, Group, Radio } from 'vux'
+
+import { getArticleList} from '../api/article/article';
+
 
 const baseList = [{
   url: 'javascript:',
@@ -46,17 +49,10 @@ export default {
   ready () {
 
   },
-  methods: {
-    demo06_onIndexChange (index) {
-      this.demo06_index = index
-    },
-    onImgError (item, $event) {
-      console.log(item, $event)
-    }
-  },
   data () {
     return {
-      demo06_list: urlList,
+      demo06_list:urlList,
+      ArticleList:[],
       demo06_index: 0,
       swiperItemIndex: 1,
       type: '4',
@@ -65,13 +61,13 @@ export default {
         fallbackSrc: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
         title: '模拟考试',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
-        url: '/customer/article/detail/1'
+        url: '/article/detail/1'
       }, {
         src: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
         title: '历届真题',
         desc: '由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。',
         url: {
-          path: '/customer/article/detail/2',
+          path: '/article/detail/2',
           replace: false
         },
         meta: {
@@ -81,9 +77,57 @@ export default {
         }
       }],
       footer: {
-        title: this.$t('more'),
-        url: '/customer/article/list'
+        title: this.$t('更多精彩文章'),
+        url: '/article/list'
       }
+    }
+  },
+  created () {
+    this.getArticle()
+  },
+  methods: {
+    demo06_onIndexChange (index) {
+      this.demo06_index = index
+    },
+    onImgError (item, $event) {
+      console.log(item, $event)
+    },
+    onImgError (item, $event) {
+      console.log(item, $event)
+    },
+    getArticle(){
+      let para = {
+          page: 1,
+          limit:3,
+        };
+        getArticleList(para).then((res) => {
+          console.log(res)
+          if (res.data.code != 0){
+            console.log("请求错误:"+ res.data.msg)
+          }else{
+              this.ArticleList = []
+              let _this = this
+              res.data.data.forEach(function(value){
+                let test= {
+                  src: '',
+                  title: value.Title,
+                  desc: value.Abstract,
+                  url: {
+                    path: '/article/detail/'+value.Id,
+                    replace: false
+                  },
+                  meta: {
+                    source: '来源：'+ value.Source,
+                    date: '日期：'+ value.PublicTime.substring(0,10),
+                    other: '阅读量：' + value.ReadCount
+                  }
+                }
+                _this.ArticleList.push(test)
+              })
+          }
+        }).catch(function(error){
+          console.log(error);
+        });
     }
   }
 }

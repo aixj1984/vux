@@ -1,6 +1,6 @@
 <template>
   <div>
-    <panel header="文章列表"  :list="list" :type="type" @on-img-error="onImgError"></panel>
+    <panel header=""  :list="ArticleList" :type="type" @on-img-error="onImgError"></panel>
   </div>
 </template>
 
@@ -16,6 +16,9 @@ More:
 <script>
 import { Panel, Group, Radio } from 'vux'
 
+import { getArticleList} from '../api/article/article';
+
+
 export default {
   components: {
     Panel,
@@ -30,6 +33,7 @@ export default {
   data () {
     return {
       type: '4',
+      ArticleList:[],
       list: [{
         src: 'http://somedomain.somdomain/x.jpg',
         fallbackSrc: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
@@ -54,6 +58,48 @@ export default {
         title: this.$t('more'),
         url: 'http://vux.li'
       }
+    }
+  },
+  created () {
+    this.getArticle()
+  },
+  methods: {
+    onImgError (item, $event) {
+      console.log(item, $event)
+    },
+    getArticle(){
+      let para = {
+          page: 1,
+          limit:50,
+        };
+        getArticleList(para).then((res) => {
+          console.log(res)
+          if (res.data.code != 0){
+            console.log("请求错误:"+ res.data.msg)
+          }else{
+              this.ArticleList = []
+              let _this = this
+              res.data.data.forEach(function(value){
+                let test= {
+                  src: '',
+                  title: value.Title,
+                  desc: value.Abstract,
+                  url: {
+                    path: '/article/detail/'+value.Id,
+                    replace: false
+                  },
+                  meta: {
+                    source: '来源：'+ value.Source,
+                    date: '日期：'+ value.PublicTime.substring(0,10),
+                    other: '阅读量：' + value.ReadCount
+                  }
+                }
+                _this.ArticleList.push(test)
+              })
+          }
+        }).catch(function(error){
+          console.log(error);
+        });
     }
   }
 }

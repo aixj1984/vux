@@ -1,10 +1,6 @@
 //基础url
 import axios from 'axios';
-
-
-let baseurl = 'http://10.0.64.39:8000'
-//let baseurl = "http://10.0.63.37:8000"
-//let baseurl = ''
+let baseurl = 'http://10.0.62.49:8000'
 
 let syscfg = {
     base :baseurl,
