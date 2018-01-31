@@ -1,7 +1,7 @@
 <template>
   <div >
     <div style="padding:15px">
-      <h3> {{ArticleDetail.Title}} </h3>
+      <h3 style="text-align: center;"> {{ArticleDetail.Title}} </h3>
       <div>
         <div>来源： {{ArticleDetail.Source}} |  发布时间：{{ArticleDetail.PublicTime}}</div>
       </div>
@@ -11,8 +11,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import { Swiper, GroupTitle, SwiperItem, XButton, Divider, Panel, Group, Radio } from 'vux'
@@ -46,7 +44,7 @@ export default {
   methods: {
     getConent(encode_content){
         let Base64 = require('js-base64').Base64;
-        console.log(encode_content)
+        //console.log(encode_content)
         return Base64.decode(encode_content)
     },
 

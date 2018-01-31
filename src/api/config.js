@@ -1,6 +1,6 @@
 //基础url
 import axios from 'axios';
-let baseurl = 'http://10.0.62.49:8000'
+let baseurl = 'http://testing.foxhelper.cn:8000'
 
 let syscfg = {
     base :baseurl,
