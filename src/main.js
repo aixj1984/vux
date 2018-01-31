@@ -105,7 +105,7 @@ if (process.env.NODE_ENV === 'production') {
     console.log('wechat ready')
     wx.onMenuShareAppMessage({
       title: 'VUX', // 分享标题
-      desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
+      desc: '内河船员考试助手',
       link: 'https://vux.li?x-page=wechat_share_message',
       imgUrl: 'https://static.vux.li/logo_520.png'
     })
