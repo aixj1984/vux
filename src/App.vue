@@ -150,6 +150,7 @@ export default {
         if (this.route.path === '/article/list') title = "文章列表"
 
         document.title = title
+        
     }
     
   },

@@ -26,6 +26,10 @@ import _ from 'lodash'
 
 import { getCourseList,saveCoursesSetting,purchaseCourses} from '../api/product/course';
 
+import { createOrder, wxPayInvoke,handleError} from '../api/weixin';
+
+import wxPay from '../api/wechat/pay.js'
+
 
 export default {
   mounted () {
@@ -68,6 +72,16 @@ export default {
       let para = {
         PurchaseCourses : chooses.substr(0,chooses.length-1),
       }
+      createOrder(para).then((res) =>{
+        if (res.data && res.data.order_id) {
+					let para = {
+						'order_id': res.data.order_id,
+						'send_sms':_this.value,
+					}
+					_this.wxPay(para);
+				}
+      }).catch(err => handleError(err, this))
+      /*
       let _this = this
       purchaseCourses(para).then((res) => {
         console.log(res)
@@ -81,7 +95,7 @@ export default {
         _this.getAllCourses()
       }).catch(function(error){
         console.log(error)
-      })
+      })*/
     },
     getAllCourses() {
       let para = {
@@ -115,7 +129,34 @@ export default {
       }).catch(function(error){
         console.log(error);
       });
-    }
+    },
+		wxPay: function(para) {
+				wxPayInvoke(para).then(axios.spread((res) => {
+				if (res.data && res.data.order_no) {
+					let param = {
+						'appId': res.data.appId,
+						'timeStamp': res.data.timeStamp,
+						'nonceStr': res.data.nonceStr,
+						'package': res.data.package,
+						'signType': res.data.signType,
+						'paySign': res.data.paySign,
+					}
+					let me = this;
+					var callback = {
+						success: function() {
+							me.$router.push('/success');
+						},
+						cancel: function() {
+							me.$router.push('/fail');
+						},
+						fail: function() {
+							me.$router.push('/fail');
+						},
+					}
+					wxPay(callback, param)
+				}
+			})).catch(err => handleError(err, this))
+		}
   },
   data () {
     return {

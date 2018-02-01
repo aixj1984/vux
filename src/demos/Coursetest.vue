@@ -77,7 +77,7 @@
               <swiper-item v-for="(item, index) in list2" :key="index">
                 <div class="answerSheet">
                     <ul v-if="QuestionsData.length">
-                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-bind:class="{ hasBeenAnswer: IsMakeAnswer(i,index), errorAnswer:IsError(i,index) }" v-on:click="onItemClick(i)" ><a href="javascript:void(0);">{{i+index*50}}</a></li>
+                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-bind:class="{ hasBeenAnswer: IsMakeAnswer(i,index), errorAnswer:IsError(i,index) }" v-on:click="onItemClick(i+index*50)" ><a href="javascript:void(0);">{{i+index*50}}</a></li>
                     </ul>
                 </div>
               </swiper-item>
@@ -362,7 +362,16 @@ export default {
       //console.log(index)
       this.showQuestionList = false
       let swiper_index =  (index-1)%5
-      //console.log(this.currentIndex)
+
+      if (swiper_index == this.mySwiper.activeIndex){
+          this.percent = index*100/this.dataLength
+          if (this.percent == 100){
+              this.showSubmit = true
+          }else{
+            this.showSubmit = false
+          }
+      }
+      console.log(swiper_index, this.mySwiper.activeIndex)
       if (index>= this.currentIndex+1 && index <= this.currentIndex + this.swiperSize){
           this.mySwiper.slideTo(swiper_index, 500, true);
       }else{

@@ -132,7 +132,7 @@ FastClick.attach(document.body)
 const routes = []
 
 const router = new VueRouter({
-  mode: 'history',
+  /*mode: 'history',
   hashbang: false,
   history: true,
   saveScrollPosition: true,
@@ -146,7 +146,7 @@ const router = new VueRouter({
         y: 0
       }
     }
-  },
+  },*/
   routes
 })
 
@@ -190,8 +190,8 @@ router.beforeEach(function (to, from, next) {
 router.afterEach(function (to) {
   store.commit('updateLoadingStatus', {isLoading: false})
   if (process.env.NODE_ENV === 'production') {
-    ga && ga('set', 'page', to.fullPath)
-    ga && ga('send', 'pageview')
+    //ga && ga('set', 'page', to.fullPath)
+    //ga && ga('send', 'pageview')
   }
 })
 

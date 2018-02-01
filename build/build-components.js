@@ -251,7 +251,7 @@ function buildConfig(one, opts) {
   config.output.libraryTarget = 'umd'
   config.output.library = `${namespace}${one.importName}`
   config.output.filename = `index.min.js`
-  config.output.path = path.resolve(__dirname, `../dist/components/${one.name}/`)
+  config.output.path = path.resolve(__dirname, `../dist/static/${one.name}/`)
   delete config.__vueOptions__
   return config
 }

@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const maps = require(path.resolve(__dirname, '../src/components/map.json'))
+const maps = require(path.resolve(__dirname, '../src/map.json'))
 delete maps.NOTICE
 
 const target = path.resolve(__dirname, '../index.js')

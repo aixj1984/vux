@@ -17,6 +17,7 @@ More:
 import { Panel, Group, Radio } from 'vux'
 
 import { getArticleList} from '../api/article/article';
+import { handleError} from '../api/weixin';
 
 
 export default {
@@ -99,6 +100,7 @@ export default {
           }
         }).catch(function(error){
           console.log(error);
+          handleError(error,this)
         });
     }
   }

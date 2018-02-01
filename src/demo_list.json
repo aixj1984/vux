@@ -1,6 +1,8 @@
 [
   "Courselist#/courselist/:courseid/:testtype",
   "Coursehome",
+  "Success#/success",
+  "Fail#/fail",
   "Coursehome#/",
   "Coursestudy#/course/study/:courseid/:testid",
   "Coursetest#/course/test/:courseid/:testid",

@@ -60,7 +60,7 @@
               <swiper-item v-for="(item, index) in list2" :key="index">
                 <div class="answerSheet">
                     <ul v-if="QuestionsData.length">
-                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-on:click="onItemClick(i)" ><a href="#">{{i+index*50}}</a></li>
+                      <li v-for="i in (QuestionsData.length-index*50)>50?50:(QuestionsData.length-index*50)"  v-on:click="onItemClick(i+index*50)" ><a href="#">{{i+index*50}}</a></li>
                     </ul>
                 </div>
               </swiper-item>
