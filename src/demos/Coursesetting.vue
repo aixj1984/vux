@@ -1,9 +1,15 @@
 <template>
   <div>
-
-    <checklist ref="demoObject" title="选择需要在首页展示的课程" :options="Courses" label-position="left" v-model="DefalueSelect" @on-change="change"></checklist>
-    <div style="padding:15px;">
-      <x-button type="primary" @click.native="SaveSeting()">保存设置</x-button>
+    <div v-if="Courses.length > 0">
+      <checklist ref="demoObject" title="选择需要在首页展示的课程" :options="Courses" label-position="left" v-model="DefalueSelect" @on-change="change"></checklist>
+      <div style="padding:15px;">
+        <x-button type="primary" @click.native="SaveSeting()">保存设置</x-button>
+      </div>
+    </div>
+    <div v-if="Courses.length == 0">
+      <card :header="{title: '课程设置'}" :footer="{title: '点击去购买',link:'/customer/course/buy'}">
+        <p slot="content" class="card-padding">没有购买任何课程！</p>
+      </card>
     </div>
     <toast v-model="showPositionValue" type="text" :time="800" is-show-mask :text="alarmtext" position="top"></toast>
   </div>
@@ -11,7 +17,7 @@
 
 
 <script>
-import { Group, CellBox, Checklist, Cell, Divider, XButton,Toast } from 'vux'
+import { Group, CellBox, Checklist, Cell, Divider, XButton,Toast,Card } from 'vux'
 import _ from 'lodash'
 
 import { getCourseList,saveCoursesSetting} from '../api/product/course';
@@ -33,7 +39,8 @@ export default {
     Divider,
     XButton,
     CellBox,
-    Toast
+    Toast,
+    Card
   },
   methods: {
     change (val, label) {
@@ -55,7 +62,7 @@ export default {
       
       let para = {
         DefalutCourses : chooses.substr(0,chooses.length-1),
-        CustomerId : parseInt(getCookie("UID")),
+        //CustomerId : parseInt(getCookie("UID")),
       }
       saveCoursesSetting(para).then((res) => {
         console.log(res)
@@ -76,7 +83,7 @@ export default {
       let para = {
         page: 1,
         limit:500,
-        customerid:1,
+        //customerid:1,
       };
       
       getCourseList(para).then((res) => {
@@ -120,5 +127,8 @@ export default {
   line-height: 28px;
   color: #888;
   font-size: 12px;
+}
+.card-padding {
+  padding: 15px;
 }
 </style>

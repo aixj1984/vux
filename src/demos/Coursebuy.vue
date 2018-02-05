@@ -61,7 +61,6 @@ export default {
     },
     Purchase(){
       let fullValues = this.$refs.PurchaseObject.getFullValue()
-      console.log(fullValues)
       if (fullValues.length == 0){
         this.alarmtext = "至少选择一个"
         this.showPositionValue = true
@@ -76,6 +75,9 @@ export default {
       let para = {
         PurchaseCourses : chooses.substr(0,chooses.length-1),
       }
+      alert(para.PurchaseCourses)
+      this.wxPay(para);
+      /*
       createOrder(para).then((res) =>{
         if (res.data && res.data.order_id) {
 					let para = {
@@ -85,6 +87,7 @@ export default {
 					_this.wxPay(para);
 				}
       }).catch(err => handleError(err, this))
+      */
       /*
       let _this = this
       purchaseCourses(para).then((res) => {
@@ -135,8 +138,10 @@ export default {
       });
     },
 		wxPay: function(para) {
-				wxPayInvoke(para).then(axios.spread((res) => {
-				if (res.data && res.data.order_no) {
+				wxPayInvoke(para).then((res) => {
+          var str = JSON.stringify(res.data);
+          //alert(str);
+				if (res.data) {
 					let param = {
 						'appId': res.data.appId,
 						'timeStamp': res.data.timeStamp,
@@ -157,9 +162,10 @@ export default {
 							me.$router.push('/fail');
 						},
 					}
+         
 					wxPay(callback, param)
 				}
-			})).catch(err => handleError(err, this))
+			}).catch(err => handleError(err, this))
 		}
   },
   data () {

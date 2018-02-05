@@ -9,7 +9,6 @@
 			<div class="invite_intro">
                 <img src="static/image/qrcode_for_gh_85fc15e8b02e_258.jpg">
             </div>
-
 		</div>
 	</div>
 </template>

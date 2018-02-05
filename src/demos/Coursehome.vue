@@ -105,7 +105,7 @@ export default {
           page: 1,
           limit:3,
         };
-        setCookie("UID","12")
+        //setCookie("UID","3")
         //alert(getCookie("UID"))
         getArticleList(para).then((res) => {
           //console.log(res)
