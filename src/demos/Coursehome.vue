@@ -10,20 +10,24 @@ import { Swiper, GroupTitle, SwiperItem, XButton, Divider, Panel, Group, Radio }
 
 import { getArticleList} from '../api/article/article';
 
+import { handleError} from '../api/weixin';
+
+import {getCookie,setCookie} from '../api/util'
+
 
 const baseList = [{
   url: 'javascript:',
-  img: 'https://static.vux.li/demo/1.jpg',
-  title: '送你一朵fua'
+  img: './static/image/1.jpg',
+  title: '送你一朵hua'
 }, {
   url: 'javascript:',
-  img: 'https://static.vux.li/demo/2.jpg',
+  img: './static/image/2.jpg',
   title: '送你一辆车'
 }, {
   url: 'javascript:',
-  img: 'https://static.vux.li/demo/3.jpg',
+  img: './static/image/3.jpg',
   title: '送你一次旅行',
-  fallbackImg: 'https://static.vux.li/demo/3.jpg'
+  fallbackImg: './static/image/3.jpg'
 }]
 
 
@@ -32,7 +36,7 @@ const urlList = baseList.map((item, index) => ({
   url: '#',
   img: item.img,
   fallbackImg: item.fallbackImg,
-  title: `(可点击)${item.title}`
+  title: `(广告位招租)${item.title}`
 }))
 
 export default {
@@ -96,17 +100,19 @@ export default {
       console.log(item, $event)
     },
     getArticle(){
+      let _this = this
       let para = {
           page: 1,
           limit:3,
         };
+        setCookie("UID","12")
+        //alert(getCookie("UID"))
         getArticleList(para).then((res) => {
-          console.log(res)
+          //console.log(res)
           if (res.data.code != 0){
             console.log("请求错误:"+ res.data.msg)
           }else{
               this.ArticleList = []
-              let _this = this
               res.data.data.forEach(function(value){
                 let test= {
                   src: '',
@@ -125,9 +131,7 @@ export default {
                 _this.ArticleList.push(test)
               })
           }
-        }).catch(function(error){
-          console.log(error);
-        });
+        }).catch(err => handleError(err, _this));
     }
   }
 }

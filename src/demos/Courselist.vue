@@ -60,7 +60,7 @@ export default {
       TestType:0,
       icon:'info',
       CourseTestTitle:'轮机基础列表',
-      TestList: [ ],
+      TestList: [ 1 ],
       footer: {
         title: this.$t('more'),
         url: 'http://vux.li'
@@ -96,7 +96,7 @@ export default {
               let _this = this
               res.data.data.forEach(function(value){
                 let test= {
-                  src: 'http://placeholder.qiniudn.com/60x60/3cc51f/ffffff',
+                  src: './static/image/list_60.jpg',
                   title: value.Title,
                   desc: value.Abstract,
                   url: _this.TestType == 2 ? '/course/test/'+_this.CourseId+"/"+value.Id : '/course/study/'+_this.CourseId+"/"+value.Id

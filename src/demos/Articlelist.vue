@@ -98,10 +98,7 @@ export default {
                 _this.ArticleList.push(test)
               })
           }
-        }).catch(function(error){
-          console.log(error);
-          handleError(error,this)
-        });
+        }).catch(err => handleError(err, this));
     }
   }
 }

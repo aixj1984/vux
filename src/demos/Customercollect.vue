@@ -105,6 +105,9 @@ import Swiper3 from '../../static/js/swiper-4.0.7/js/swiper.js'
 
 import { getCollectQuestionList,saveCollectQuestion,delCollectQuestion} from '../api/product/question';
 
+
+import {getCookie,setCookie} from '../api/util'
+
 export default {
   mounted () {
     /*
@@ -207,6 +210,7 @@ export default {
       let para = {
         QuestionId: this.currentData[this.mySwiper.activeIndex].Id,
         CourseId : parseInt(this.CourseId),
+        CustomerId : parseInt(getCookie("UID")),
       }
       if (newVal){
         this.saveCollect(para)

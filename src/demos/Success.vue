@@ -5,7 +5,7 @@
 			<p class="success_text_b">您的订单已支付成功</p>
 			<br/>
 			<br/>
-			<p class="success_text_r">关注公众号,获得享脉家最及时的更新信息</p>
+			<p class="success_text_r">关注公众号,获得内河船员助手最新信息</p>
 			<div class="invite_intro">
                 <img src="static/image/qrcode_for_gh_85fc15e8b02e_258.jpg">
             </div>

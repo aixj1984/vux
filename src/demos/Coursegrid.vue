@@ -4,17 +4,17 @@
       <group-title>{{course.Name}}</group-title>
       <grid>
         <grid-item :link="'/courselist/'+course.Id+'/0'" :label="$t('Go to Zhenti Xuexi')">
-          <img slot="icon" src="../assets/grid_icon.png">
+          <img slot="icon" src="../assets/zhenti.jpg">
         </grid-item>
         <grid-item :link="'/courselist/'+course.Id+'/1'" :label="$t('Go to Zhenti Kaoshi')">
-          <img slot="icon" src="../assets/grid_icon.png">
+          <img slot="icon" src="../assets/tiku.jpg">
         </grid-item>
         <grid-item :link="'/courselist/'+course.Id+'/2'" >
-          <img slot="icon" src="../assets/grid_icon.png">
+          <img slot="icon" src="../assets/ceshi.jpg">
           <span slot="label">{{ $t('Go to Moni Ceshi') }}</span>
         </grid-item>
         <grid-item :link="'/customer/collect/'+course.Id">
-          <img slot="icon" src="../assets/grid_icon.png">
+          <img slot="icon" src="../assets/shoucang.jpg">
           <span slot="label">{{ $t('Go to Cuoti') }}</span>
         </grid-item>
       </grid>
@@ -60,6 +60,10 @@ import { Grid, GridItem, GroupTitle, Card } from 'vux'
 
 import { getCourseList} from '../api/product/course';
 
+
+import {getCookie,setCookie} from '../api/util'
+
+
 export default {
   components: {
     Grid,
@@ -70,7 +74,7 @@ export default {
   data () {
     return {
       title:"abc",
-      Courses: [],
+      Courses: [1],
     }
   },
   created(){
@@ -84,9 +88,8 @@ export default {
           let para = {
             page: 1,
             limit:500,
-            customerid:1,
+            customerid:getCookie("UID"),
           };
-          
           getCourseList(para).then((res) => {
             console.log(res)
             if (res.data.code != 0){
@@ -114,6 +117,10 @@ export default {
   display: block;
   text-align: center;
   color: #666;
+}
+
+.weui-cells__title{
+  color:#c52828;
 }
 .card-padding {
   padding: 15px;

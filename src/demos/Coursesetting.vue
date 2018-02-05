@@ -16,6 +16,8 @@ import _ from 'lodash'
 
 import { getCourseList,saveCoursesSetting} from '../api/product/course';
 
+import {getCookie,setCookie} from '../api/util'
+
 export default {
   mounted () {
 
@@ -53,7 +55,7 @@ export default {
       
       let para = {
         DefalutCourses : chooses.substr(0,chooses.length-1),
-        CustomerId : 1,
+        CustomerId : parseInt(getCookie("UID")),
       }
       saveCoursesSetting(para).then((res) => {
         console.log(res)

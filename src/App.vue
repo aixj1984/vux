@@ -43,6 +43,10 @@
 import { Radio, Group, Cell, Badge, Drawer, Actionsheet, ButtonTab, ButtonTabItem, ViewBox, XHeader, Tabbar, TabbarItem, Loading, TransferDom,Grid, GridItem } from 'vux'
 import { mapState, mapActions } from 'vuex'
 
+import {getCookie,setCookie} from './api/util'
+
+import syscfg from './api/config'
+
 export default {
   directives: {
     TransferDom
@@ -121,6 +125,8 @@ export default {
         this.$router.replace('/demo')
         return
       }
+      //alert(getCookie("UID"))
+
       if (path === '/demo') {
         setTimeout(() => {
           this.box = document.querySelector('#demo_list_box')
@@ -134,7 +140,6 @@ export default {
       }
     },
     '$route': function(to,from) {
-
         let title = "内河轮机考试"
         if (this.route.path === '/')  title = '主页'
         if (this.route.path === '/project/donate') title = '捐赠'

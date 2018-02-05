@@ -1,10 +1,13 @@
 import syscfg from './config'
 
 
+let baseSiteUrl = 'http://testing.foxhelper.cn/#'
 export const handleError = (err, component) => {
+  alert("handleError", err.response.status)
     if (err.response && err.response.status === 401) {
-        let url = syscfg.wxUrl +  component.$route.path;
-        window.location.href = url;
+        let url = syscfg.wxUrl +  "http://testing.foxhelper.cn"//encodeURIComponent(baseSiteUrl+ component.$route.path);
+        alert(url)
+        window.location.href = (url);
       } else {
         console.log(err)
         //console.log(err.response)
@@ -12,6 +15,7 @@ export const handleError = (err, component) => {
         //window.location.href = "/innererror";
       }
 };
+
 
 //order
 export const   createOrder = order => {

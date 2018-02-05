@@ -117,6 +117,8 @@ import Swiper3 from '../../static/js/swiper-4.0.7/js/swiper.js'
 
 import { getTestQuestionList,saveCollectQuestion,delCollectQuestion} from '../api/product/question';
 
+import {getCookie,setCookie} from '../api/util'
+
 export default {
   mounted () {
     /*
@@ -219,6 +221,7 @@ export default {
       let para = {
         QuestionId: this.currentData[this.mySwiper.activeIndex].Id,
         CourseId : parseInt(this.CourseId),
+        CustomerId : parseInt(getCookie("UID")),
       }
       if (newVal){
         this.saveCollect(para)
@@ -318,6 +321,11 @@ export default {
 
       if (swiper_index == this.mySwiper.activeIndex){
           this.percent = index*100/this.dataLength
+          if (this.percent == 100){
+              this.showSubmit = true
+          }else{
+            this.showSubmit = false
+          }
       }
 
       if (index>= this.currentIndex+1 && index <= this.currentIndex + this.swiperSize){

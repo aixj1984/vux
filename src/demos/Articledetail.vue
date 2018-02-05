@@ -3,8 +3,9 @@
     <div style="padding:15px">
       <h3 style="text-align: center;"> {{ArticleDetail.Title}} </h3>
       <div>
-        <div>来源： {{ArticleDetail.Source}} |  发布时间：{{ArticleDetail.PublicTime}}</div>
+        <div style="text-align: center;">来源： {{ArticleDetail.Source}} |  发布时间：{{ArticleDetail.PublicTime?ArticleDetail.PublicTime.substring(0,10):""}}</div>
       </div>
+      <br/>
       <div v-html="getConent(ArticleDetail.Content)">
        
       </div>
@@ -16,7 +17,7 @@
 import { Swiper, GroupTitle, SwiperItem, XButton, Divider, Panel, Group, Radio } from 'vux'
 
 import { getArticleDetail} from '../api/article/article';
-
+import { handleError} from '../api/weixin';
 
 
 export default {
@@ -59,9 +60,7 @@ export default {
           }else{
               this.ArticleDetail = res.data.data
           }
-        }).catch(function(error){
-          console.log(error);
-        });
+        }).catch(err => handleError(err, this));
     }
   }
 }

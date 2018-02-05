@@ -114,6 +114,8 @@ import { getTestQuestionList,saveCollectQuestion,delCollectQuestion} from '../ap
 
 import { addTestResult} from '../api/product/test';
 
+import {getCookie,setCookie} from '../api/util'
+
 
 
 function isEquals(a, b) {
@@ -177,7 +179,7 @@ export default {
       toastType: 'success',
       showToast: false,
       toastMsg:"",
-      currentData:[],
+      currentData:[1],
       currentIndex: 0,
       QuestionsData:[],
       showShouChangConfirm:false,
@@ -234,6 +236,7 @@ export default {
       let para = {
         QuestionId: this.currentData[this.mySwiper.activeIndex].Id,
         CourseId : parseInt(this.CourseId),
+        CustomerId : parseInt(getCookie("UID")),
       }
       if (newVal){
         this.saveCollect(para)

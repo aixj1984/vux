@@ -30,6 +30,8 @@ import { createOrder, wxPayInvoke,handleError} from '../api/weixin';
 
 import wxPay from '../api/wechat/pay.js'
 
+import {getCookie,setCookie} from '../api/util'
+
 
 export default {
   mounted () {
@@ -53,7 +55,9 @@ export default {
     change (val, label) {
       console.log('change', val, label)
       this.Amount = val.length*120
-      this.DiscountAmount = this.Amount*(1-(val.length-1)*0.05)
+      
+      let discount_rate = (1-(val.length-1)*0.05).toFixed(2)
+      this.DiscountAmount = this.Amount*discount_rate
     },
     Purchase(){
       let fullValues = this.$refs.PurchaseObject.getFullValue()
@@ -101,7 +105,7 @@ export default {
       let para = {
         page: 1,
         limit:500,
-        customerid:1,
+        customerid:parseInt(getCookie("UID")),
       };
       
       getCourseList(para).then((res) => {

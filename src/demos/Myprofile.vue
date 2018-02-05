@@ -17,6 +17,11 @@
       <cell title="课程设置" link="/customer/course/setting" ></cell>
       <cell title="捐赠鼓励" link="/customer/donate" ></cell>
     </group>
+    <div>
+      <p style="margin:20px 10px 10px 10px;color:rgb(116, 123, 116);">
+      &nbsp;&nbsp;&nbsp;&nbsp;系统刚上线，信息还在持续整理中，您购买的课程可能没有历史考题，希望谅解。我们将持续更新的题库和测试题目。
+      </p>
+    </div>
   </div>
 </template>
 
