@@ -21,9 +21,9 @@
         </transition>
 
         <tabbar class="vux-demo-tabbar" icon-class="vux-center" v-show="!isTabbarDemo" slot="bottom">
-          <tabbar-item :link="{path:'/component/coursehome'}" :selected="isDemo" >
+          <tabbar-item :link="{path:'/'}" :selected="route.path === '/'" >
             <span class="demo-icon-22" slot="icon">&#xe632;</span>
-            <span slot="label">首页</span>
+            <span slot="label">资讯</span>
           </tabbar-item>
           <tabbar-item :link="{path:'/component/coursegrid'}" :selected="route.path === '/component/coursegrid'">
             <span class="demo-icon-22 vux-demo-tabbar-icon-home" slot="icon" style="position:relative;top: -2px;">&#xe637;</span>
@@ -120,12 +120,12 @@ export default {
   },
   watch: {
     path (path) {
+      setCookie("UID","3")
       console.log(path)
       if (path === '/component/demo') {
         this.$router.replace('/demo')
         return
       }
-      //alert(getCookie("UID"))
 
       if (path === '/demo') {
         setTimeout(() => {
@@ -141,11 +141,10 @@ export default {
     },
     '$route': function(to,from) {
         let title = "内河轮机考试"
-        if (this.route.path === '/')  title = '主页'
+        if (this.route.path === '/')  title = '最新资讯'
         if (this.route.path === '/project/donate') title = '捐赠'
         if (this.route.path === '/demo') title =  'Demo list'
         if (this.route.path === '/component/coursegrid') title =  '课程信息'
-        if (this.route.path === '/component/coursehome') title =  '欢迎使用'
         if (/courselist/.test(this.route.path)) title =  '试题列表'
         if (this.route.path === '/myprofile') title =  "我的设置"
         if (this.route.path === '/customer/course/buy') title =  "课程购买"
@@ -204,7 +203,6 @@ export default {
       if (this.route.path === '/project/donate') return 'Donate'
       if (this.route.path === '/demo') return 'Demo list'
       if (this.route.path === '/component/coursegrid') return '课程信息'
-      if (this.route.path === '/component/coursehome') return '欢迎使用'
       if (/courselist/.test(this.route.path)) return '试题列表'
       if (this.route.path === '/myprofile') return "我的设置"
       if (this.route.path === '/customer/course/buy') return "课程购买"

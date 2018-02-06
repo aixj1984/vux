@@ -17,6 +17,9 @@
           </tr>
         </tbody>
       </x-table>
+      <div style="text-align: center;  margin-top: 40px; color: #656597;" v-if="testData.length == 0">
+        <p>你还没有测试记录，赶紧去试试自己的能力吧！</p>
+      </div>
     </div> 
   </div>
 </template>

@@ -75,7 +75,7 @@ export default {
       let para = {
         PurchaseCourses : chooses.substr(0,chooses.length-1),
       }
-      alert(para.PurchaseCourses)
+      //alert(para.PurchaseCourses)
       this.wxPay(para);
       /*
       createOrder(para).then((res) =>{

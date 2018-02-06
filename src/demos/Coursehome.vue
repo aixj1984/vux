@@ -1,7 +1,7 @@
 <template>
   <div>
     <swiper loop auto :list="demo06_list" :index="demo06_index" @on-index-change="demo06_onIndexChange"></swiper>
-    <panel header="推荐文章" :footer="footer" :list="ArticleList" :type="type" @on-img-error="onImgError"></panel>
+    <panel header="" :footer="footer" :list="ArticleList" :type="type" @on-img-error="onImgError"></panel>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ import {getCookie,setCookie} from '../api/util'
 const baseList = [{
   url: 'javascript:',
   img: './static/image/1.jpg',
-  title: '送你一朵hua'
+  title: '送你一朵花'
 }, {
   url: 'javascript:',
   img: './static/image/2.jpg',
@@ -105,7 +105,7 @@ export default {
           page: 1,
           limit:3,
         };
-        //setCookie("UID","3")
+        setCookie("UID","3")
         //alert(getCookie("UID"))
         getArticleList(para).then((res) => {
           //console.log(res)
@@ -152,6 +152,9 @@ export default {
   font-size: 12px;
   text-align: center;
   line-height: 30px;
+}
+.weui-panel{
+  margin-top:0px;
 }
 .black {
   background-color: #000;
